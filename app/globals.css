@@ -229,7 +229,7 @@ img { display:block; max-width:100%; }
 .voices-head h3 { margin:0; font-size:clamp(24px,2.4vw,36px); line-height:1.2; letter-spacing:-.025em; }
 .voice-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
 .voice-grid figure { margin:0; border:1px solid var(--line); background:var(--paper); }
-.voice-grid img { width:100%; aspect-ratio:16/10; object-fit:cover; object-position:50% 25%; filter:grayscale(1); }
+.voice-grid img { width:100%; aspect-ratio:16/10; object-fit:cover; object-position:50% 25%; }
 .voice-grid figcaption { min-height:210px; display:flex; flex-direction:column; padding:22px; }
 .voice-grid blockquote { margin:0; color:var(--orange); font-size:clamp(20px,2vw,28px); line-height:1.45; letter-spacing:-.02em; font-weight:600; }
 .voice-grid figcaption p { margin:auto 0 0; padding-top:24px; color:var(--muted); font-size:12px; }
