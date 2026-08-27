@@ -118,7 +118,7 @@ export function ProofVoices({ c, base }: { c: SiteCopy; base: string }) {
   return (
     <section className="proof-chapter" id="proof">
       <div className="section proof-section"><div className="section-head section-head-wide"><div><p className="kicker">{c.proofKicker}</p><h2>{c.proofTitle}</h2></div><p className="lede">{c.proofIntro}</p></div><div className="proof-list">{c.proof.map((item, i) => <article key={item.company}><span>0{i + 1}</span><h3>{item.company}</h3><strong>{item.outcome}</strong><p>{item.detail}</p></article>)}</div></div>
-      <div className="voices-section"><div className="voices-head"><p className="kicker">{c.voiceKicker}</p><h3>{c.voiceTitle}</h3></div><div className="voice-grid">{c.voices.map((v) => <figure key={v.by}><img src={asset(v.image, base)} alt={v.by} width="800" height="600" /><figcaption><blockquote>“{v.quote}”</blockquote><p>— {v.by}</p></figcaption></figure>)}</div></div>
+      <div className="voices-section"><div className="voices-head"><p className="kicker">{c.voiceKicker}</p><h3>{c.voiceTitle}</h3></div><div className="voice-grid">{c.voices.map((v) => <figure key={v.by}><img src={asset(v.image, base)} alt={v.by} width="800" height="600" style={{ objectPosition: v.pos }} /><figcaption><blockquote>“{v.quote}”</blockquote><p>— {v.by}</p></figcaption></figure>)}</div></div>
     </section>
   );
 }

@@ -20,7 +20,7 @@ export type SiteCopy = {
   solutionsKicker: string; solutionsTitle: string; solutionsBody: string; solutions: Item[];
   globalKicker: string; globalTitle: string; globalBody: string; globalMetrics: Metric[]; globalDone: string; globalNext: string;
   proofKicker: string; proofTitle: string; proofIntro: string; proof: { company: string; outcome: string; detail: string }[];
-  voiceKicker: string; voiceTitle: string; voices: { quote: string; by: string; image: string }[];
+  voiceKicker: string; voiceTitle: string; voices: { quote: string; by: string; image: string; pos?: string }[];
   brandKicker: string; brandTitle: string; brandBody: string; brandLine: string;
   actionKicker: string; actionTitle: string; actions: Action[]; location: string; email: string; phone: string; copyright: string;
   explore: { title: string; body: string; href: string }[];
@@ -129,9 +129,9 @@ export const copies: Record<Locale, SiteCopy> = {
     ],
     voiceKicker: '创始人声音', voiceTitle: '人们相信火星，因为长期陪伴留下了具体记忆。',
     voices: [
-      { quote: '负责到底的长期坚持，赢得了硬科技创业者的“信任溢价”。', by: '龚䶮 · 华屹科技创始人、CEO', image: 'founder-gongyan.jpeg' },
-      { quote: '在亮哥的加速营，对我的成长和提升非常大，陪我度过了一次很重要的个人瓶颈突破。', by: '李婷婷 · 木宇信息创始人', image: 'founder-litingting.jpeg' },
-      { quote: '七年来一路见证亮哥与团队，面对挑战一次次迎难而上，一番番破茧重生。', by: '柴志伟 · 深擎科技 CEO', image: 'founder-chaizhiwei.png' },
+      { quote: '负责到底的长期坚持，赢得了硬科技创业者的“信任溢价”。', by: '龚䶮 · 华屹科技创始人、CEO', image: 'founder-gongyan.jpeg', pos: '50% 85%' },
+      { quote: '在亮哥的加速营，对我的成长和提升非常大，陪我度过了一次很重要的个人瓶颈突破。', by: '李婷婷 · 木宇信息创始人', image: 'founder-litingting.jpeg', pos: '50% 4%' },
+      { quote: '七年来一路见证亮哥与团队，面对挑战一次次迎难而上，一番番破茧重生。', by: '柴志伟 · 深擎科技 CEO', image: 'founder-chaizhiwei.png', pos: '50% 31%' },
     ],
     brandKicker: '品牌故事', brandTitle: '聚是一团火，散是满天星。',
     brandBody: '科技创业者像降落到地球的火星人：在人群中是异类，来到这里，都是同类。他们在科技无人区探索拓荒，也在用科技推动人类进步。',
@@ -255,9 +255,9 @@ export const copies: Record<Locale, SiteCopy> = {
     ],
     voiceKicker: 'Founder voices', voiceTitle: 'People trust Mars because long-term support leaves specific memories.',
     voices: [
-      { quote: 'Years of follow-through have earned the Mars team a rare trust premium among hard-tech founders.', by: 'Gong Yan · Founder & CEO, Huayi Technology', image: 'founder-gongyan.jpeg' },
-      { quote: 'The program transformed my growth as a founder. Its faculty, curriculum and thoughtful team helped me break through a critical bottleneck.', by: 'Li Tingting · Founder, Muyu Information', image: 'founder-litingting.jpeg' },
-      { quote: 'For seven years, I have watched Liang and his team face uncertainty head-on and emerge stronger.', by: 'Chai Zhiwei · CEO, Shenqing Technology', image: 'founder-chaizhiwei.png' },
+      { quote: 'Years of follow-through have earned the Mars team a rare trust premium among hard-tech founders.', by: 'Gong Yan · Founder & CEO, Huayi Technology', image: 'founder-gongyan.jpeg', pos: '50% 85%' },
+      { quote: 'The program transformed my growth as a founder. Its faculty, curriculum and thoughtful team helped me break through a critical bottleneck.', by: 'Li Tingting · Founder, Muyu Information', image: 'founder-litingting.jpeg', pos: '50% 4%' },
+      { quote: 'For seven years, I have watched Liang and his team face uncertainty head-on and emerge stronger.', by: 'Chai Zhiwei · CEO, Shenqing Technology', image: 'founder-chaizhiwei.png', pos: '50% 31%' },
     ],
     brandKicker: 'Brand story', brandTitle: 'Together, a blazing fire; apart, stars across the sky.',
     brandBody: 'Technology founders are Martians on Earth: pioneers in uncharted territory who find their peers here—and use technology to advance human progress.',
