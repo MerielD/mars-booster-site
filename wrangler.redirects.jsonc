@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "marsbooster-domain-redirects",
+  "main": "cloudflare/redirect-worker.js",
+  "compatibility_date": "2026-08-31",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "www.marsbooster.net",
+      "custom_domain": true
+    },
+    {
+      "pattern": "marsbooster.net",
+      "custom_domain": true
+    },
+    {
+      "pattern": "marsbooster.global",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.marsbooster.global",
+      "custom_domain": true
+    }
+  ]
+}

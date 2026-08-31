@@ -12,7 +12,26 @@ npm run dev
 Chinese: `/zh/`  
 English: `/en/`
 
-## GitHub Pages
+## Cloudflare Pages
+
+The production site is deployed to the `marsbooster` Cloudflare Pages project.
+
+```bash
+npm run deploy:pages
+```
+
+Canonical domain: `https://www.marsbooster.net`
+
+The canonical hostname is proxied to Pages by a small domain Worker. The apex
+`.net` domain and both `.global` hostnames are handled by the same Worker, so
+every path and query string receives a permanent redirect to the canonical
+domain:
+
+```bash
+npm run deploy:redirects
+```
+
+## GitHub Pages (legacy workflow)
 
 This directory is ready to be used as the root of a GitHub repository.
 
