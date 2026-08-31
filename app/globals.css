@@ -6,6 +6,7 @@ html { scroll-behavior:smooth; }
 body { margin:0; background:var(--paper); color:var(--ink); font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif; }
 a { color:inherit; text-decoration:none; }
 img { display:block; max-width:100%; }
+.arrow-icon { display:block; width:1em; height:1em; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:square; stroke-linejoin:miter; }
 .site { overflow-x:clip; background:var(--paper); }
 .site :is(#top,#about,#insight,#programs,#industry,#global,#proof,#contact) { scroll-margin-top:24px; }
 .locale-en { font-family:Inter,"Helvetica Neue",Arial,sans-serif; }
@@ -46,7 +47,7 @@ img { display:block; max-width:100%; }
 .kicker-light { color:#fff; }
 .kicker-light::before { background:var(--orange); }
 .text-link { display:inline-flex; align-items:center; gap:32px; padding:14px 16px 14px 0; border-bottom:2px solid var(--orange); font-size:15px; }
-.text-link span { color:var(--orange); font-size:21px; }
+.text-link .arrow-icon { color:var(--orange); font-size:21px; }
 .dark-section { background:var(--dark); color:#fff; }
 .section { padding:var(--section-space) var(--page-gutter); }
 .section-number { color:var(--orange); font-size:11px; font-weight:700; letter-spacing:.15em; }
@@ -81,7 +82,7 @@ img { display:block; max-width:100%; }
 .trust-proof-copy h2 { max-width:900px; margin:0; font-size:clamp(38px,3.9vw,62px); line-height:1.12; letter-spacing:-.045em; }
 .trust-proof-copy>p:not(.kicker) { max-width:800px; margin:24px 0 0; color:var(--muted); font-size:clamp(15px,1.22vw,18px); line-height:1.78; }
 .trust-proof-copy>a { display:inline-flex; gap:24px; margin-top:24px; padding-bottom:7px; border-bottom:1px solid var(--orange); font-size:13px; }
-.trust-proof-copy>a span { color:var(--orange); }
+.trust-proof-copy>a .arrow-icon { color:var(--orange); }
 .trust-person { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 14px; margin-top:30px; padding-top:18px; border-top:1px solid var(--line); }
 .trust-person strong { font-size:17px; letter-spacing:-.01em; }
 .trust-person span { color:var(--muted); font-size:12px; line-height:1.55; }
@@ -188,7 +189,7 @@ img { display:block; max-width:100%; }
 .program-compare summary>i { display:none; }
 .program-compare summary h3 { margin:30px 0 10px; font-size:clamp(23px,2vw,31px); line-height:1.2; }
 .program-compare summary p { margin:0; color:var(--orange); font-size:12px; line-height:1.5; }
-.program-cta span { color:var(--orange); font-size:18px; }
+.program-cta .arrow-icon { color:var(--orange); font-size:18px; }
 
 .venture-section { display:grid; grid-template-columns:minmax(420px,.9fr) minmax(0,1.1fr); background:var(--paper); }
 .venture-copy { padding:var(--section-space) var(--page-gutter); }

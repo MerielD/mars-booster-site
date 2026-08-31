@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { copies, type Locale } from './content';
+import { ArrowIcon } from './icons';
 
 // Depth-aware asset prefix: '' = homepage (../assets), '../' = sub-page (../../assets).
 const asset = (name: string, base: string) => `${base === '' ? '../' : '../../'}assets/ppt/${name}`;
@@ -51,13 +52,13 @@ export function Shell({
         <div className="footer-content">
           <p className="kicker kicker-light">{c.actionKicker}</p>
           <h2>{c.actionTitle}</h2>
-          <div className="action-grid">{c.actions.map((x, i) => <a key={x.title} href={x.href}><span>0{i + 1}</span><h3>{x.title}</h3><p>{x.body}</p><b aria-hidden="true">↗</b></a>)}</div>
+          <div className="action-grid">{c.actions.map((x, i) => <a key={x.title} href={x.href}><span>0{i + 1}</span><h3>{x.title}</h3><p>{x.body}</p><b><ArrowIcon direction="up-right" /></b></a>)}</div>
           <address className="contact"><span>{c.location}</span><a href={`mailto:${c.email}`}>{c.email}</a><a href={`tel:${c.phone.replace(/\s/g, '')}`}>{c.phone}</a></address>
         </div>
         <div className="footer-bottom">
           <img src={asset('mars-logo-white.png', base)} alt={logoAlt} width="498" height="112" />
           <span>© 2026 {c.copyright}</span>
-          <a href="#top" aria-label={en ? 'Back to top' : '返回顶部'}>↑</a>
+          <a href="#top" aria-label={en ? 'Back to top' : '返回顶部'}><ArrowIcon direction="up" /></a>
         </div>
       </footer>
     </main>

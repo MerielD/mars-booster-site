@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- relative static assets are required for GitHub Pages subpaths */
 
 import { type Locale, type SiteCopy } from './content';
+import { ArrowIcon } from './icons';
 
 // Depth-aware asset prefix: '' = homepage (../assets), '../' = sub-page (../../assets).
 const asset = (name: string, base: string) => `${base === '' ? '../' : '../../'}assets/ppt/${name}`;
@@ -12,7 +13,7 @@ export function Hero({ c, base }: { c: SiteCopy; base: string }) {
   return (
     <section className="hero" id="top" aria-labelledby="hero-title">
       <div className="hero-image" style={{ backgroundImage: `url('${asset('hero-community.jpeg', base)}')` }} aria-hidden="true" /><div className="hero-shade" aria-hidden="true" />
-      <div className="hero-content"><p className="kicker kicker-light">{c.heroKicker}</p><h1 id="hero-title">{c.heroLines.map((line) => <span key={line}>{line}</span>)}</h1><p className="hero-summary">{c.heroSummary}</p><a className="text-link text-link-light" href={`${base}about`}>{c.heroCta}<span aria-hidden="true">↘</span></a></div>
+      <div className="hero-content"><p className="kicker kicker-light">{c.heroKicker}</p><h1 id="hero-title">{c.heroLines.map((line) => <span key={line}>{line}</span>)}</h1><p className="hero-summary">{c.heroSummary}</p><a className="text-link text-link-light" href={`${base}about`}>{c.heroCta}<ArrowIcon direction="down-right" /></a></div>
       <p className="hero-marker">{c.heroMarker}</p>
     </section>
   );
@@ -26,7 +27,7 @@ export function Glance({ c }: { c: SiteCopy }) {
 
 export function TrustProof({ c, base }: { c: SiteCopy; base: string }) {
   return (
-    <aside className="trust-proof" aria-labelledby="trust-proof-title"><div className="trust-proof-copy"><p className="kicker">{c.trustProofKicker}</p><h2 id="trust-proof-title">{c.trustProofTitle}</h2><p>{c.trustProofBody}</p><a href={`${base}proof`}>{c.trustProofLink}<span aria-hidden="true">↘</span></a><div className="trust-person"><strong>{c.trustProofPerson}</strong><span>{c.trustProofPersonRole}</span></div></div><div className="trust-proof-metrics">{c.trustProofMetrics.map((m) => <article key={m.label}><strong>{m.value}</strong><span>{m.label}</span></article>)}</div></aside>
+    <aside className="trust-proof" aria-labelledby="trust-proof-title"><div className="trust-proof-copy"><p className="kicker">{c.trustProofKicker}</p><h2 id="trust-proof-title">{c.trustProofTitle}</h2><p>{c.trustProofBody}</p><a href={`${base}proof`}>{c.trustProofLink}<ArrowIcon direction="down-right" /></a><div className="trust-person"><strong>{c.trustProofPerson}</strong><span>{c.trustProofPersonRole}</span></div></div><div className="trust-proof-metrics">{c.trustProofMetrics.map((m) => <article key={m.label}><strong>{m.value}</strong><span>{m.label}</span></article>)}</div></aside>
   );
 }
 
@@ -49,7 +50,7 @@ export function Explore({ c, base }: { c: SiteCopy; base: string }) {
   return (
     <section className="section explore-section">
       <div className="section-head"><div><p className="kicker">{c.aboutKicker}</p><h2>{c.aboutTitle}</h2></div><p className="lede">{c.aboutBody}</p></div>
-      <div className="explore-grid">{c.explore.map((x) => <a key={x.href} href={`${base}${x.href}`}><h3>{x.title}</h3><p>{x.body}</p><b aria-hidden="true">↗</b></a>)}</div>
+      <div className="explore-grid">{c.explore.map((x) => <a key={x.href} href={`${base}${x.href}`}><h3>{x.title}</h3><p>{x.body}</p><b><ArrowIcon direction="up-right" /></b></a>)}</div>
     </section>
   );
 }
@@ -80,9 +81,9 @@ export function Programs({ c }: { c: SiteCopy }) {
       <div className="program-compare program-compare-desktop" aria-label={c.programsTitle}>
         <div className="compare-row compare-head">{c.programs.map((p, pi) => <div className="program-head" key={p.title}><span>0{pi + 1}</span><h3>{p.title}</h3><p>{p.status}</p></div>)}</div>
         {c.programLabels.map((label, i) => <div className="compare-row" key={label}>{c.programs.map((p) => <div className="program-detail" key={p.title}><b>{label}</b><p>{p[programFields[i]]}</p></div>)}</div>)}
-        <div className="compare-row compare-cta">{c.programs.map((p) => <a className="program-cta" href={p.href} key={p.title}>{p.cta}<span aria-hidden="true">↗</span></a>)}</div>
+        <div className="compare-row compare-cta">{c.programs.map((p) => <a className="program-cta" href={p.href} key={p.title}>{p.cta}<ArrowIcon direction="up-right" /></a>)}</div>
       </div>
-      <div className="program-compare program-accordion">{c.programs.map((p, pi) => <details key={p.title}><summary><span>0{pi + 1}</span><h3>{p.title}</h3><p>{p.status}</p><i aria-hidden="true">＋</i></summary>{[p.audience, p.stage, p.format, p.value, p.role].map((value, i) => <div className="program-detail" key={c.programLabels[i]}><b>{c.programLabels[i]}</b><p>{value}</p></div>)}<a className="program-cta" href={p.href}>{p.cta}<span aria-hidden="true">↗</span></a></details>)}</div>
+      <div className="program-compare program-accordion">{c.programs.map((p, pi) => <details key={p.title}><summary><span>0{pi + 1}</span><h3>{p.title}</h3><p>{p.status}</p><i aria-hidden="true">＋</i></summary>{[p.audience, p.stage, p.format, p.value, p.role].map((value, i) => <div className="program-detail" key={c.programLabels[i]}><b>{c.programLabels[i]}</b><p>{value}</p></div>)}<a className="program-cta" href={p.href}>{p.cta}<ArrowIcon direction="up-right" /></a></details>)}</div>
     </section>
   );
 }
@@ -103,7 +104,7 @@ export function Insight({ c, locale, base }: { c: SiteCopy; locale: Locale; base
   return (
     <section className="chapter">
       <div className="section section-head-wrap"><div className="section-head"><div><p className="kicker">{c.insightKicker}</p><h2>{c.insightTitle}</h2></div><p className="lede">{c.insightBody}</p></div></div>
-      <div className="insight-section"><div className="insight-image"><img src={asset('research-roundtable.jpeg', base)} alt={locale === 'zh' ? '火星行业研究讨论' : 'Mars industry research discussion'} width="1600" height="1067" /></div><div className="insight-copy"><div className="insight-assets">{c.insightAssets.map((x, i) => <a key={x.title} href={x.href}><span>0{i + 1}</span><div><h3>{x.title}</h3><p>{x.body}</p><small>{x.access}</small></div><b aria-hidden="true">↗</b></a>)}</div></div></div>
+      <div className="insight-section"><div className="insight-image"><img src={asset('research-roundtable.jpeg', base)} alt={locale === 'zh' ? '火星行业研究讨论' : 'Mars industry research discussion'} width="1600" height="1067" /></div><div className="insight-copy"><div className="insight-assets">{c.insightAssets.map((x, i) => <a key={x.title} href={x.href}><span>0{i + 1}</span><div><h3>{x.title}</h3><p>{x.body}</p><small>{x.access}</small></div><b><ArrowIcon direction="up-right" /></b></a>)}</div></div></div>
     </section>
   );
 }
