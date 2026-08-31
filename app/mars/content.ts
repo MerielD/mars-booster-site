@@ -129,7 +129,7 @@ export const copies: Record<Locale, SiteCopy> = {
     ],
     voiceKicker: '创始人声音', voiceTitle: '人们相信火星，因为长期陪伴留下了具体记忆。',
     voices: [
-      { quote: '负责到底的长期坚持，赢得了硬科技创业者的“信任溢价”。', by: '龚䶮 · 华屹科技创始人、CEO', image: 'founder-gongyan.jpeg', pos: '50% 85%' },
+      { quote: '负责到底的长期坚持，赢得了硬科技创业者的“信任溢价”。', by: '龚䶮 · 华屹科技创CEO', image: 'founder-gongyan.jpeg', pos: '50% 0%' },
       { quote: '在亮哥的加速营，对我的成长和提升非常大，陪我度过了一次很重要的个人瓶颈突破。', by: '李婷婷 · 木宇信息创始人', image: 'founder-litingting.jpeg', pos: '50% 4%' },
       { quote: '七年来一路见证亮哥与团队，面对挑战一次次迎难而上，一番番破茧重生。', by: '柴志伟 · 深擎科技 CEO', image: 'founder-chaizhiwei.png', pos: '50% 31%' },
     ],
@@ -255,7 +255,7 @@ export const copies: Record<Locale, SiteCopy> = {
     ],
     voiceKicker: 'Founder voices', voiceTitle: 'People trust Mars because long-term support leaves specific memories.',
     voices: [
-      { quote: 'Years of follow-through have earned the Mars team a rare trust premium among hard-tech founders.', by: 'Gong Yan · Founder & CEO, Huayi Technology', image: 'founder-gongyan.jpeg', pos: '50% 85%' },
+      { quote: 'Years of follow-through have earned the Mars team a rare trust premium among hard-tech founders.', by: 'Gong Yan · Founder & CEO, Huayi Technology', image: 'founder-gongyan.jpeg', pos: '50% 0%' },
       { quote: 'The program transformed my growth as a founder. Its faculty, curriculum and thoughtful team helped me break through a critical bottleneck.', by: 'Li Tingting · Founder, Muyu Information', image: 'founder-litingting.jpeg', pos: '50% 4%' },
       { quote: 'For seven years, I have watched Liang and his team face uncertainty head-on and emerge stronger.', by: 'Chai Zhiwei · CEO, Shenqing Technology', image: 'founder-chaizhiwei.png', pos: '50% 31%' },
     ],
