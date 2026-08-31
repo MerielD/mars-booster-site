@@ -14,7 +14,18 @@ English: `/en/`
 
 ## Cloudflare Pages
 
-The production site is deployed to the `marsbooster` Cloudflare Pages project.
+The production site is deployed to the `mars-booster-site` Cloudflare Pages project.
+Cloudflare is connected to the `MerielD/mars-booster-site` GitHub repository
+and automatically deploys pushes to `main`.
+
+Cloudflare build settings:
+
+- Production branch: `main`
+- Build command: `npm run build:pages`
+- Build output directory: `pages-dist`
+- Root directory: `/`
+
+For a manual fallback deployment:
 
 ```bash
 npm run deploy:pages
@@ -30,14 +41,6 @@ domain:
 ```bash
 npm run deploy:redirects
 ```
-
-## GitHub Pages (legacy workflow)
-
-This directory is ready to be used as the root of a GitHub repository.
-
-1. Push it to a repository whose default branch is `main`.
-2. In the repository settings, choose **Pages → Source → GitHub Actions**.
-3. The included `.github/workflows/deploy-pages.yml` workflow builds and publishes the site.
 
 To generate the same static artifact locally:
 

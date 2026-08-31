@@ -1,5 +1,5 @@
 const CANONICAL_HOST = 'www.marsbooster.net';
-const PAGES_ORIGIN = 'marsbooster.pages.dev';
+const PAGES_ORIGIN = 'mars-booster-site.pages.dev';
 
 const redirectWorker = {
   fetch(request) {

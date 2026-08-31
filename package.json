@@ -9,7 +9,7 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "build:pages": "vinext build && node scripts/export-github-pages.mjs",
-    "deploy:pages": "npm run build:pages && wrangler pages deploy pages-dist --project-name marsbooster --branch main",
+    "deploy:pages": "npm run build:pages && wrangler pages deploy pages-dist --project-name mars-booster-site --branch main",
     "deploy:redirects": "wrangler deploy --config wrangler.redirects.jsonc",
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern pages-dist --ignore-pattern .next"
