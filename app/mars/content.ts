@@ -33,9 +33,9 @@ export const copies: Record<Locale, SiteCopy> = {
     heroKicker: '物理AI创始人加速与创新生态平台', heroLines: ['从技术到市场，', '从中国到全球'],
     heroSummary: '连接创始人、产业与市场，陪伴新一代科技创业者完成从专家到创始人、从产品到真实市场、从中国到全球的关键跨越。',
     heroCta: '认识火星', heroMarker: '上海 · 苏州 · 深圳 · 北京',
-    glanceLabel: '截至 2026.07.22', glance: [
-      { value: '2024.12', label: '成立于上海' }, { value: '8期', label: '主办及联合主办项目' },
-      { value: '320+', label: '火星物理AI企业学员' }, { value: '30+', label: '企业、政府及园区伙伴' }, { value: '5个', label: '孵化及投资项目' },
+    glanceLabel: '截至 2026.09.04', glance: [
+      { value: '2024.12', label: '成立于上海' }, { value: '9期', label: '主办及联合主办项目' },
+      { value: '350+', label: '火星物理AI企业学员' }, { value: '30+', label: '企业、政府及园区伙伴' }, { value: '5个', label: '孵化及投资项目' },
     ],
     trustProofKicker: '社区成果案例', trustProofTitle: '火星的连接与陪伴，是创始人关键结果的一部分。',
     trustProofBody: '火星参与组织建设、供应链与校友业务连接；创始人的关键结果，同样由企业自身经营、市场环境与多方支持共同促成。',
@@ -79,10 +79,10 @@ export const copies: Record<Locale, SiteCopy> = {
       { title: '生态动员与影响力放大', body: '社区、活动、内容与全球伙伴协同' },
     ],
     networkKicker: '创始人网络', networkTitle: '网络的价值不在规模，而在高质量节点之间持续发生的合作。',
-    networkBody: '320+为火星自2024年12月成立以来的物理AI企业学员；下列规模来自核心团队九年长期积累，并非火星成立后新增。精选进入、深度共学、高频互动与长期协作，才是这些节点产生价值的方式。',
+    networkBody: '350+为火星自2024年12月成立以来的物理AI企业学员；下列规模来自核心团队九年长期积累，并非火星成立后新增。精选进入、深度共学、高频互动与长期协作，才是这些节点产生价值的方式。',
     networkMetrics: [
-      { value: '640+', label: '创始人校友', note: '核心团队九年累计｜非火星新增' }, { value: '600+', label: '社区企业', note: '核心团队九年累计｜非火星新增' },
-      { value: '500+', label: '具身智能产业链企业', note: '核心团队九年累计｜非火星新增' }, { value: '2,000+', label: '投资人与生态伙伴', note: '核心团队九年累计｜非火星新增' },
+      { value: '640+', label: '创始人校友', note: '核心团队九年累计' }, { value: '600+', label: '社区企业', note: '核心团队九年累计' },
+      { value: '500+', label: '具身智能产业链企业', note: '核心团队九年累计' }, { value: '2,000+', label: '投资人与生态伙伴', note: '核心团队九年累计' },
     ],
     touchpoints: [
       { title: '行研会', body: '围绕技术路线、商业化与产业趋势展开小规模深度讨论。' },
@@ -159,9 +159,9 @@ export const copies: Record<Locale, SiteCopy> = {
     heroKicker: 'Founder Acceleration & Innovation Ecosystem for Physical AI', heroLines: ['From technology to market.', 'From China to the world.'],
     heroSummary: 'We connect founders, industry and markets—helping technology entrepreneurs cross from expert to founder, product to real market, and China to the world.',
     heroCta: 'Meet Mars Booster', heroMarker: 'SHANGHAI · SUZHOU · SHENZHEN · BEIJING',
-    glanceLabel: 'AS OF JUL 22, 2026', glance: [
-      { value: '2024.12', label: 'Founded in Shanghai' }, { value: '8', label: 'Programs hosted / co-hosted' },
-      { value: '320+', label: 'Mars Physical AI company participants' }, { value: '30+', label: 'Corporate, government & park partners' }, { value: '5', label: 'Incubation & investment projects' },
+    glanceLabel: 'AS OF SEP 4, 2026', glance: [
+      { value: '2024.12', label: 'Founded in Shanghai' }, { value: '9', label: 'Programs hosted / co-hosted' },
+      { value: '350+', label: 'Mars Physical AI company participants' }, { value: '30+', label: 'Corporate, government & park partners' }, { value: '5', label: 'Incubation & investment projects' },
     ],
     trustProofKicker: 'Community outcome cases', trustProofTitle: 'Mars’ connection and support are one part of founders’ key results.',
     trustProofBody: 'Mars participated in organization building, supply-chain and alumni-business connections. Founders’ key results also reflect their own execution, market conditions and support from many parties.',
@@ -205,10 +205,10 @@ export const copies: Record<Locale, SiteCopy> = {
       { title: 'Ecosystem mobilization & reach', body: 'Community, events, content and global partners' },
     ],
     networkKicker: 'Founder network', networkTitle: 'A network’s value lies not in scale, but in what its high-quality nodes build together.',
-    networkBody: 'The 320+ figure covers Mars Physical AI company participants since December 2024. The larger figures below come from the core team’s nine-year cumulative network and are not additions since Mars was founded. Curated entry, deep peer learning and long-term collaboration are how those nodes create value.',
+    networkBody: 'The 350+ figure covers Mars Physical AI company participants since December 2024. The larger figures below come from the core team’s nine-year cumulative network and are not additions since Mars was founded. Curated entry, deep peer learning and long-term collaboration are how those nodes create value.',
     networkMetrics: [
-      { value: '640+', label: 'Founder alumni', note: '9-year team network · not Mars-era additions' }, { value: '600+', label: 'Community companies', note: '9-year team network · not Mars-era additions' },
-      { value: '500+', label: 'Embodied AI value-chain companies', note: '9-year team network · not Mars-era additions' }, { value: '2,000+', label: 'Investors & ecosystem partners', note: '9-year team network · not Mars-era additions' },
+      { value: '640+', label: 'Founder alumni', note: '9-year team network' }, { value: '600+', label: 'Community companies', note: '9-year team network' },
+      { value: '500+', label: 'Embodied AI value-chain companies', note: '9-year team network' }, { value: '2,000+', label: 'Investors & ecosystem partners', note: '9-year team network' },
     ],
     touchpoints: [
       { title: 'Research roundtables', body: 'Small-group discussions on technology paths, commercialization and industry trends.' },
