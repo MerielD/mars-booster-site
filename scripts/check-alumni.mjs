@@ -54,7 +54,7 @@ for (const file of files) {
 const payloads = [JSON.stringify(data), JSON.stringify(english), JSON.stringify(names), ...artifacts];
 for (const text of payloads) assert(!/中际旭创|Zhongji|Innolight/i.test(text), 'Excluded brand terms');
 let enHtml = await readFile(path.join(root, 'pages-dist/en/alumni/index.html'), 'utf8');
-enHtml = enHtml.replace(/<[^>]+>/g, ' ');
+enHtml = enHtml.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16))).replace(/&#(\d+);/g, (_, decimal) => String.fromCodePoint(Number(decimal)));
 const allowedNames = [...new Set(data.companies.flatMap((c) => [c.name, c.fullName]).filter(Boolean))].sort((a, b) => b.length - a.length);
 for (const name of [...allowedNames, '中文']) enHtml = enHtml.split(name).join('');
 assert(!/[\u4e00-\u9fff]/.test(enHtml), 'English page prose must be translated; Chinese company/legal names are allowed');
