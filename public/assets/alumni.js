@@ -18,7 +18,13 @@
   close.type = 'button';
   close.className = 'co-close';
   close.textContent = document.documentElement.lang.indexOf('en') === 0 ? 'Close details' : '\u6536\u8d77\u8be6\u60c5';
-  drawer.appendChild(close);
+  var drawerHeader = document.createElement('header');
+  drawerHeader.className = 'co-drawer-header';
+  var drawerTitle = document.createElement('h3');
+  drawerTitle.className = 'co-drawer-title';
+  drawerHeader.appendChild(drawerTitle);
+  drawerHeader.appendChild(close);
+  drawer.appendChild(drawerHeader);
   function closeDetails(returnFocus) {
     if (!active) return;
     var card = active;
@@ -49,6 +55,7 @@
     card.open = true;
     var summary = card.querySelector('summary');
     summary.setAttribute('aria-expanded', 'true');
+    drawerTitle.textContent = card.querySelector('.co-name').textContent;
     drawer.setAttribute('aria-labelledby', summary.id);
     drawer.appendChild(card.querySelector('.co-open'));
     drawer.hidden = false;
