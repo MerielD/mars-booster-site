@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const artifact = path.join(root, 'pages-dist');
-const out = path.resolve(root, '../prototype/qa-zh-alumni');
+const out = path.resolve(root, '../prototype/qa-round02-alumni');
 await mkdir(out, { recursive: true });
 const server = createServer(async (req, res) => {
   try {
@@ -132,7 +132,7 @@ try {
   await shot('news-375', 375, newsTop, 1500);
   assert.equal(await evaluate("getComputedStyle(document.querySelector('.alumni-news-row span'),'::after').content"), 'none', 'No duplicated news-source pseudo element');
   await evaluate("document.querySelector('.alumni-news-more summary').click()");
-  assert.equal(await evaluate("document.querySelectorAll('.alumni-news-row').length"), 105);
+  assert.equal(await evaluate("document.querySelectorAll('[data-news-id]').length"), 105);
   const eventTop = await evaluate("Math.round(document.querySelector('#events').getBoundingClientRect().top+scrollY)");
   await shot('events-375', 375, eventTop, 1500);
   // Saved history states restore controls and results without disturbing other query parameters.
@@ -151,14 +151,21 @@ try {
   await evaluate("document.getElementById('ev-2').click()");
   assert.equal(await evaluate("getComputedStyle(document.querySelector('.event-empty')).display"), 'block', 'Empty-month fallback needs no script');
   await send('Emulation.setScriptExecutionDisabled', { value: false });
-  for (const width of [1440, 768, 375]) {
+  for (const width of [1440, 768, 390, 375]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 700 });
     await load('', 'en');
     assert.equal(await visible(), 185);
     assert.equal(await evaluate("document.getElementById('alumni-count').textContent"), '185 companies');
     assert.equal(await evaluate("document.documentElement.scrollWidth<=innerWidth"), true, 'English layout must not overflow');
     assert.equal(await evaluate("document.querySelector('.alumni-title').textContent"), 'Find companies. Explore the ecosystem.');
-    assert.equal(await evaluate("document.querySelectorAll('.alumni-news-row').length"), 30);
+    assert.equal(await evaluate("document.querySelectorAll('[data-news-id]').length"), 30);
+    const snapshot = JSON.parse(await readFile(path.join(root, 'data/alumni.json'), 'utf8'));
+    const names = JSON.parse(await readFile(path.join(root, 'data/company-names.json'), 'utf8'));
+    const expectedNames = snapshot.companies.map((c) => {
+      const name = names[c.id];
+      return name?.verified && name.nameEn && /^https?:\/\//.test(name.sourceUrl || '') ? name.nameEn : c.name;
+    });
+    assert.deepEqual(await evaluate("[...document.querySelectorAll('.co-name')].map(e=>e.textContent)"), expectedNames, 'Missing official English names retain Chinese');
     assert.equal(await evaluate("document.querySelector('.language-link').href.endsWith('/mars-booster-site/zh/alumni/')"), true);
     await shot('english-' + width, width);
   }
@@ -169,6 +176,93 @@ try {
   assert.equal(await visible(), 1, 'Verified official company name is searchable');
   await evaluate("document.getElementById('alumni-reset').click()");
   assert.equal(await evaluate("document.getElementById('alumni-count').textContent"), '185 companies', 'Reset stays localized');
+  // Round 02: row drawers must preserve every summary position in the selected row.
+  for (const locale of ['zh', 'en']) {
+    for (const width of [1440, 768, 390, 375]) {
+      await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 700 });
+      await load('', locale);
+      assert.equal(await evaluate(`(() => {
+        const ids=[...document.querySelectorAll('[data-news-id]')].map(e=>e.dataset.newsId);
+        return new Set(ids).size===ids.length && document.querySelectorAll('.alumni-featured article').length===3;
+      })()`), true, 'Featured and timeline records are unique');
+      for (const index of [1, 5, 8, 184]) {
+        const layout = await evaluate(`(() => {
+          const cards=[...document.querySelectorAll('.co-card')];
+          const card=cards[${index}];
+          const summary=card.querySelector('summary');
+          const before=summary.getBoundingClientRect();
+          summary.click();
+          const after=summary.getBoundingClientRect();
+          const drawer=document.querySelector('.co-drawer');
+          const columns=getComputedStyle(card.parentElement).gridTemplateColumns.split(' ').length;
+          const end=cards[Math.min(Math.ceil((${index}+1)/columns)*columns,cards.length)-1];
+          const result={stable:Math.abs(before.x-after.x)<1 && Math.abs(before.y-after.y)<1,
+            correct:drawer.previousElementSibling===end && drawer.getBoundingClientRect().top>=end.getBoundingClientRect().bottom,
+            single:document.querySelectorAll('.co-card[open]').length===1,
+            labelled:drawer.getAttribute('aria-labelledby')===summary.id && summary.getAttribute('aria-expanded')==='true',
+            content:drawer.querySelectorAll('.co-open').length===1};
+          return result;
+        })()`);
+        assert(Object.values(layout).every(Boolean), `${locale}/${width}/${index}: ${JSON.stringify(layout)}`);
+        const top = await evaluate("Math.max(0,document.querySelector('.co-card[open]').getBoundingClientRect().top+scrollY-20)");
+        await shot(`drawer-${locale}-${width}-${index}`, width, top, 1050);
+        await evaluate("document.querySelector('.co-close').click()");
+        assert.equal(await evaluate("document.activeElement.matches('.co-card summary') && !document.querySelector('.co-card[open]')"), true, 'Close returns focus');
+      }
+      await evaluate("document.querySelectorAll('.co-card summary')[1].click();document.querySelectorAll('.co-card summary')[8].click()");
+      assert.equal(await evaluate("document.querySelectorAll('.co-card[open]').length"), 1, 'Switch closes previous company');
+      await evaluate("document.querySelectorAll('.co-card summary')[8].click()");
+      assert.equal(await evaluate("document.querySelector('.co-drawer').hidden"), true, 'Same summary closes');
+      await evaluate("document.getElementById('seg-1').click();[...document.querySelectorAll('.co-card')].filter(c=>getComputedStyle(c).display!=='none').at(-1).querySelector('summary').click()");
+      assert.equal(await evaluate("document.querySelector('.co-drawer').previousElementSibling=== [...document.querySelectorAll('.co-card')].filter(c=>getComputedStyle(c).display!=='none').at(-1)"), true, 'Filtered last row');
+      await evaluate("document.getElementById('alumni-reset').click()");
+      assert.equal(await evaluate("!document.querySelector('.co-card[open]') && document.querySelectorAll('.co-card>.co-open').length===185"), true, 'Reset restores all content');
+      await evaluate("document.querySelectorAll('.co-card summary')[1].click();document.getElementById('reg-1').click()");
+      assert.equal(await evaluate("document.querySelector('.co-drawer').hidden"), true, 'Filter closes drawer');
+      await evaluate("document.getElementById('alumni-reset').click();document.querySelector('.alumni-filter-panel').open=true");
+      await shot(`filters-${locale}-${width}`, width, await evaluate("document.querySelector('.alumni-filters').getBoundingClientRect().top+scrollY"), 1000);
+      for (const selector of ['.alumni-news-row', '#news', '#events']) {
+        const top=await evaluate(`document.querySelector('${selector}').getBoundingClientRect().top+scrollY`);
+        await shot(`${selector==='#news'?'featured':selector==='#events'?'events':'timeline'}-${locale}-${width}`, width, top, 1500);
+      }
+      await evaluate(`(() => {
+        const cards=[...document.querySelectorAll('.co-card')];
+        cards.sort((a,b)=>b.querySelector('.co-name').textContent.length-a.querySelector('.co-name').textContent.length)[0].querySelector('summary').click();
+      })()`);
+      assert.equal(await evaluate("document.documentElement.scrollWidth<=innerWidth"), true, 'Longest name reflows');
+      await shot(`longest-name-${locale}-${width}`, width, await evaluate("document.querySelector('.co-card[open]').getBoundingClientRect().top+scrollY"));
+      await evaluate("document.querySelector('.co-close').click()");
+      await evaluate(`(() => {
+        [...document.querySelectorAll('.co-card')].sort((a,b)=>b.querySelector('.co-intro').textContent.length-a.querySelector('.co-intro').textContent.length)[0].querySelector('summary').click();
+      })()`);
+      assert.equal(await evaluate("document.documentElement.scrollWidth<=innerWidth"), true, 'Longest intro reflows');
+      await shot(`longest-intro-${locale}-${width}`, width, await evaluate("document.querySelector('.co-card[open]').getBoundingClientRect().top+scrollY"));
+      assert.equal(await evaluate("getComputedStyle(document.querySelector('.co-intro')).fontSize"), '16px');
+      assert.equal(await evaluate("getComputedStyle(document.querySelector('.alumni-news-row span')).fontSize"), '16px');
+    }
+  }
+  await evaluate("document.querySelector('.co-close').focus()");
+  await send('Emulation.setDeviceMetricsOverride', { width:1440, height:900, deviceScaleFactor:1, mobile:false });
+  await wait(100);
+  assert.equal(await evaluate("document.activeElement.className"), 'co-close', 'Resize preserves drawer focus');
+  assert.equal(await evaluate("document.querySelector('.co-drawer').previousElementSibling.getBoundingClientRect().bottom<=document.querySelector('.co-drawer').getBoundingClientRect().top"), true, 'Resize repositions drawer');
+  await send('Emulation.setDeviceMetricsOverride', { width:720, height:450, deviceScaleFactor:2, mobile:false });
+  await wait(100);
+  assert.equal(await evaluate("document.documentElement.scrollWidth<=innerWidth"), true, 'Open drawer at 200% equivalent reflow');
+  await send('Emulation.setDeviceMetricsOverride', { width:1440, height:900, deviceScaleFactor:1, mobile:false });
+  await evaluate("document.querySelector('.co-close').click();document.querySelector('.co-card summary').focus()");
+  for (const key of [{key:'Enter',code:'Enter',text:'\r',windowsVirtualKeyCode:13},{key:' ',code:'Space',text:' ',windowsVirtualKeyCode:32}]) {
+    await send('Input.dispatchKeyEvent', {type:'keyDown', ...key});
+    await send('Input.dispatchKeyEvent', {type:'keyUp', key:key.key, code:key.code, windowsVirtualKeyCode:key.windowsVirtualKeyCode});
+    await wait(50);
+  }
+  assert.equal(await evaluate("document.querySelector('.co-drawer').hidden"), true, 'Enter opens, Space closes');
+  await send('Emulation.setScriptExecutionDisabled', { value:true });
+  await load();
+  await evaluate("document.querySelectorAll('.co-card summary')[1].click()");
+  assert.equal(await evaluate("document.querySelectorAll('.co-card')[1].open && getComputedStyle(document.querySelectorAll('.co-open')[1]).display==='grid'"), true, 'Native no-script details remain readable');
+  await shot('fallback-1440', 1440, await evaluate("document.querySelector('.co-card[open]').getBoundingClientRect().top+scrollY"));
+  await send('Emulation.setScriptExecutionDisabled', { value:false });
   let legacyCases = 0;
   for (const width of [1440, 1280, 1024, 375]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 700 });

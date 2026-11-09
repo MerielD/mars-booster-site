@@ -8,6 +8,69 @@
   input.dataset.ready = 'true';
 
   var cards = Array.prototype.slice.call(document.querySelectorAll('.co-card'));
+  var grid = document.querySelector('.alumni-grid');
+  var active = null;
+  var drawer = document.createElement('section');
+  drawer.className = 'co-drawer';
+  drawer.hidden = true;
+  drawer.setAttribute('role', 'region');
+  var close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'co-close';
+  close.textContent = document.documentElement.lang.indexOf('en') === 0 ? 'Close details' : '\u6536\u8d77\u8be6\u60c5';
+  drawer.appendChild(close);
+  function closeDetails(returnFocus) {
+    if (!active) return;
+    var card = active;
+    var summary = card.querySelector('summary');
+    var content = drawer.querySelector('.co-open');
+    if (content) card.appendChild(content);
+    card.open = false;
+    summary.setAttribute('aria-expanded', 'false');
+    drawer.hidden = true;
+    active = null;
+    if (returnFocus) summary.focus({ preventScroll: true });
+  }
+  function positionDrawer() {
+    if (!active) return;
+    var focused = document.activeElement;
+    // Temporarily removing the drawer restores the uninterrupted summary grid.
+    drawer.remove();
+    var visibleCards = cards.filter(function (card) { return getComputedStyle(card).display !== 'none'; });
+    var columns = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+    var index = visibleCards.indexOf(active);
+    var last = Math.min(Math.ceil((index + 1) / columns) * columns, visibleCards.length) - 1;
+    visibleCards[last].after(drawer);
+    if (focused && drawer.contains(focused)) focused.focus({ preventScroll: true });
+  }
+  function openDetails(card) {
+    closeDetails(false);
+    active = card;
+    card.open = true;
+    var summary = card.querySelector('summary');
+    summary.setAttribute('aria-expanded', 'true');
+    drawer.setAttribute('aria-labelledby', summary.id);
+    drawer.appendChild(card.querySelector('.co-open'));
+    drawer.hidden = false;
+    positionDrawer();
+  }
+  cards.forEach(function (card) {
+    var summary = card.querySelector('summary');
+    summary.setAttribute('aria-controls', card.querySelector('.co-open').id);
+    summary.setAttribute('aria-expanded', 'false');
+    card.open = false;
+    summary.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (active === card) closeDetails(false);
+      else openDetails(card);
+    });
+  });
+  close.addEventListener('click', function () { closeDetails(true); });
+  drawer.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') { event.preventDefault(); closeDetails(true); }
+  });
+  grid.classList.add('alumni-grid-enhanced');
+  window.addEventListener('resize', positionDrawer);
   var groups = { segment: 'seg-', region: 'reg-', period: 'per-', 'event-month': 'ev-' };
   function selected(name) { return document.querySelector('input[name="' + name + '"]:checked'); }
   function restore() {
@@ -33,6 +96,7 @@
   }
 
   function apply(updateUrl) {
+    closeDetails(drawer.contains(document.activeElement));
     var q = input.value.trim().toLowerCase();
     var seg = document.querySelector('input[name="segment"]:checked');
     var reg = document.querySelector('input[name="region"]:checked');

@@ -64,14 +64,14 @@ function CompanyCard({ c, locale }: { c: AlumniCompany; locale: Locale }) {
     .join(' ')
     .toLowerCase();
   return (
-    <details className={classes} data-search={search}>
-      <summary>
+    <details className={classes} data-company-id={c.id} data-search={search}>
+      <summary id={`company-${c.id}`}>
         <span className="co-name">{c.name}</span>
         <span className="co-meta">{meta}</span>
         <span className="co-seg">{c.segment}</span>
         <i className="co-plus" aria-hidden="true">+</i>
       </summary>
-      <div className="co-open">
+      <div className="co-open" id={`detail-${c.id}`}>
         <div>
           <p className="co-intro">{c.intro}</p>
           {c.subSegment ? <p className="co-detail">{c.subSegment}</p> : null}
@@ -126,7 +126,7 @@ function EventRow({ e, locale }: { e: AlumniEvent; locale: Locale }) {
 
 function NewsRow({ n }: { n: AlumniNews }) {
   return (
-    <a className="alumni-news-row" href={n.url} target="_blank" rel="noopener">
+    <a className="alumni-news-row" data-news-id={n.id} href={n.url} target="_blank" rel="noopener">
       <time>{n.date.replace(/-/g, '.')}</time><b>{n.company}</b><span>{n.title}</span><em>{n.source}</em>
     </a>
   );
@@ -137,6 +137,10 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
   const ui = alumniUi[locale];
   const scheduledIds = new Set(scheduled.map((e) => e.id));
   const upcoming = A.events.filter((e) => scheduledIds.has(e.id));
+  const featuredIds = new Set(['reczz28XSn9mlEIS', 'reczz28XSn9mlEXK', 'reczz28XSn9mlEc1']);
+  const news = A.news.filter((n) => n.url && n.date);
+  const featured = news.filter((n) => featuredIds.has(n.id));
+  const remaining = news.filter((n) => !featuredIds.has(n.id));
   return (
     <>
       <section className="section alumni-intro">
@@ -218,12 +222,21 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
           </div>
           <p className="lede">{ui.newsIntro}</p>
         </div>
+        <div className="alumni-featured" aria-label={locale === 'en' ? 'Featured news' : '重点新闻'}>
+          {featured.map((n) => (
+            <article key={n.id} data-news-id={n.id}>
+              <p className="featured-company">{n.company}</p>
+              <h3><a href={n.url} target="_blank" rel="noopener">{n.title}</a></h3>
+              <p className="featured-source"><time>{n.date.replace(/-/g, '.')}</time><span>{n.source} ↗</span></p>
+            </article>
+          ))}
+        </div>
         <div className="alumni-news">
-          {A.news.filter((n) => n.url && n.date).slice(0, 16).map((n) => <NewsRow key={n.id} n={n} />)}
+          {remaining.slice(0, 16).map((n) => <NewsRow key={n.id} n={n} />)}
         </div>
         <details className="alumni-news-more">
           <summary>{ui.more}</summary>
-          {A.news.filter((n) => n.url && n.date).slice(16).map((n) => <NewsRow key={n.id} n={n} />)}
+          {remaining.slice(16).map((n) => <NewsRow key={n.id} n={n} />)}
         </details>
       </section>
 

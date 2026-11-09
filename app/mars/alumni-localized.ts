@@ -48,6 +48,7 @@ const names = researchedNames as Record<string, { nameEn: string | null; verifie
 const english = translations as { intro: Record<string, string>; events: Record<string, string>; news: Record<string, string> };
 const companyNames = new Map(alumni.companies.map((c) => {
   const research = names[c.id];
+  // Keep the Chinese name when no evidenced official English name is available.
   return [c.name, research?.verified && research.nameEn && /^https?:\/\//.test(research.sourceUrl || '') ? research.nameEn : c.name];
 }));
 
