@@ -2,11 +2,12 @@ import { type ReactNode } from 'react';
 import { copies, type Locale } from './content';
 import { Shell } from './shell';
 import { Hero, Glance, TrustProof, Thesis, Explore, AboutModel, Network, Programs, VenturesSolutions, Insight, Global, ProofVoices, Brand } from './sections';
+import { AlumniPageContent } from './alumni';
 
 const SLUGS = ['about', 'programs', 'ventures', 'insight', 'global', 'proof'];
 
-/** Wrap a page's content in the shared header/footer with built relative nav. */
-function Page({ locale, base, children }: { locale: Locale; base: string; children: ReactNode }) {
+/** Wrap a page's content in the shared header/footer with built relative nav. `slug` enables same-page language switching. */
+function Page({ locale, base, slug = '', children }: { locale: Locale; base: string; slug?: string; children: ReactNode }) {
   const c = copies[locale];
   const nav = [
     { label: c.nav[0], href: `${base}about` },
@@ -15,9 +16,10 @@ function Page({ locale, base, children }: { locale: Locale; base: string; childr
     { label: c.nav[3], href: `${base}insight` },
     { label: c.nav[4], href: `${base}global` },
     { label: c.nav[5], href: `${base}proof` },
-    { label: c.nav[6], href: '#contact' },
+    { label: c.nav[6], href: `${base}alumni` },
+    { label: c.nav[7], href: '#contact' },
   ];
-  const switchHref = `${base}${locale === 'zh' ? '../en/' : '../zh/'}`;
+  const switchHref = `${base}${locale === 'zh' ? '../en/' : '../zh/'}${slug}`;
   return (
     <Shell locale={locale} base={base} nav={nav} switchLabel={c.switchLabel} switchHref={switchHref} logoAlt={c.logoAlt} menuLabel={c.menuLabel} child={children} />
   );
@@ -88,6 +90,14 @@ export function ProofPage({ locale }: { locale: Locale }) {
   return (
     <Page locale={locale} base="../">
       <ProofVoices c={c} base="../" />
+    </Page>
+  );
+}
+
+export function AlumniPage({ locale }: { locale: Locale }) {
+  return (
+    <Page locale={locale} base="../" slug="alumni/">
+      <AlumniPageContent locale={locale} />
     </Page>
   );
 }

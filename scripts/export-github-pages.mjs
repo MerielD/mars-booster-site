@@ -39,16 +39,21 @@ function makeStatic(html, route) {
   const depth = route.split('/').filter(Boolean).length; // '/'→0, '/zh/'→1, '/zh/programs/'→2
   const prefix = depth === 0 ? './' : '../'.repeat(depth);
   const language = route.startsWith('/zh') ? 'zh-CN' : 'en';
+  // 校友页保留搜索脚本（public/assets/alumni.js 由下方 cp public/assets 复制进产物）
+  const keepScript = /^\/(?:zh|en)\/alumni\/$/.test(route)
+    ? `<script src="${prefix}assets/alumni.js" defer data-keep></script>`
+    : '';
   return html
     .replace(/<html lang="[^"]*">/i, `<html lang="${language}">`)
     .replace('</head>', `<link rel="icon" href="${prefix}favicon.png" type="image/png"/></head>`)
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<link\b[^>]*rel="modulepreload"[^>]*>/gi, '')
-    .replaceAll('"/_next/', `"${prefix}_next/`);
+    .replaceAll('"/_next/', `"${prefix}_next/`)
+    .replace('</body>', `${keepScript}</body>`);
 }
 
 try {
-  const SUB = ['about', 'programs', 'ventures', 'insight', 'global', 'proof'];
+  const SUB = ['about', 'programs', 'ventures', 'insight', 'global', 'proof', 'alumni'];
 const ROUTES = ['/', '/zh/', '/en/', ...SUB.flatMap((s) => [`/zh/${s}/`, `/en/${s}/`])];
 
 await waitForServer();

@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-:root { --orange:#f15a24; --ink:#101112; --muted:#686b6d; --paper:#f5f6f8; --line:#d2d5d7; --dark:#090b0c; --page-gutter:clamp(28px,6vw,104px); --section-space:clamp(48px,4.5vw,72px); }
+:root { --orange:#f15a24; --ink:#101112; --muted:#686b6d; --paper:#f5f6f8; --line:#d2d5d7; --dark:#090b0c; --white:#ffffff; --page-gutter:clamp(28px,6vw,104px); --section-space:clamp(48px,4.5vw,72px); }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body { margin:0; background:var(--paper); color:var(--ink); font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif; }
@@ -366,3 +366,201 @@ img { display:block; max-width:100%; }
 }
 
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } * { transition-duration:.01ms!important; } }
+
+/* ── 校友生态（round 01）───────────────────────────────────────────── */
+
+.alumni-intro { padding-top:var(--section-space); padding-bottom:0; }
+.alumni-title { margin:0; font-size:clamp(38px,3.9vw,62px); line-height:1.12; letter-spacing:-.045em; font-weight:620; }
+.alumni-glance { border-bottom:1px solid rgba(255,255,255,.16); }
+
+.alumni-filters { padding:0 var(--page-gutter); background:var(--paper); border-bottom:1px solid var(--line); }
+.alumni-search { display:flex; align-items:center; gap:14px; height:54px; margin-top:4px; background:var(--white); border:1px solid var(--line); padding:0 18px; }
+.alumni-search:focus-within { border-color:var(--ink); }
+.alumni-search svg { flex:none; width:17px; height:17px; fill:none; stroke:var(--muted); stroke-width:1.6; }
+.alumni-search input { flex:1; min-width:0; border:0; outline:0; background:transparent; font:inherit; font-size:14px; color:var(--ink); }
+.alumni-search input::placeholder { color:#9a9da0; }
+.filter-row { display:grid; grid-template-columns:54px minmax(0,1fr); gap:16px; align-items:start; padding:11px 0; border-top:1px solid var(--line); }
+.filter-row:first-child { border-top:0; }
+.filter-row>span { padding-top:3px; font-size:10px; letter-spacing:.14em; color:var(--muted); }
+.filter-options { display:flex; flex-wrap:wrap; gap:2px 20px; }
+.filter-option { position:relative; display:inline-flex; font-size:12.5px; color:var(--muted); cursor:pointer; }
+.filter-option input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer; }
+.filter-option span { padding:3px 0; border-bottom:2px solid transparent; }
+.filter-option b { margin-left:4px; font-weight:400; font-size:10.5px; color:#9a9da0; }
+.filter-option:hover span { color:var(--ink); }
+.filter-option input:checked+span { color:var(--ink); border-bottom-color:var(--orange); }
+.filter-option input:focus-visible+span { outline:1px solid var(--orange); outline-offset:2px; }
+
+.alumni-table { padding:26px var(--page-gutter) var(--section-space); background:var(--paper); }
+.alumni-count { margin-bottom:10px; font-size:11px; letter-spacing:.06em; color:var(--muted); }
+.alumni-empty { padding:48px 0 26px; font-size:13px; color:var(--muted); }
+.alumni-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--line); border-top:1px solid var(--ink); border-bottom:1px solid var(--line); }
+.co-card { background:var(--white); }
+.co-card summary { position:relative; display:grid; grid-template-columns:minmax(0,1fr); gap:3px; padding:15px 16px 17px; cursor:pointer; list-style:none; }
+.co-card summary::-webkit-details-marker { display:none; }
+.co-card summary:focus-visible { outline:1px solid var(--orange); outline-offset:-1px; }
+.co-card:hover .co-name { color:var(--orange); }
+.co-name { padding-right:22px; font-size:15.5px; font-weight:620; letter-spacing:-.02em; line-height:1.3; }
+.co-meta { font-size:11.5px; letter-spacing:.02em; color:var(--muted); }
+.co-seg { font-size:11.5px; letter-spacing:.03em; color:var(--muted); }
+.co-plus { position:absolute; top:14px; right:14px; font-style:normal; font-size:15px; line-height:1; color:#b4b7ba; }
+.co-card[open] .co-plus { transform:rotate(45deg); }
+.co-card[open] { grid-column:1/-1; }
+.co-card[open] .co-name { display:inline; padding-right:0; }
+.co-card[open] summary { border-bottom:1px solid var(--line); }
+.co-open { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr); gap:clamp(24px,4vw,56px); padding:18px 22px 22px; }
+.co-intro { margin:0; font-size:12.5px; line-height:1.7; color:var(--muted); }
+.co-full { margin:10px 0 0; font-size:10.5px; color:#9a9da0; }
+.co-links { display:flex; flex-direction:column; gap:8px; font-size:11px; line-height:1.6; }
+.co-links a { color:var(--muted); }
+.co-links a:hover { color:var(--ink); }
+.co-links b { margin-right:6px; font-weight:600; color:var(--ink); }
+
+/* 无 JS 筛选：用 :has() 读同一份 DOM */
+.alumni-dir:has(#seg-1:checked) .co-card:not(.s1),
+.alumni-dir:has(#seg-2:checked) .co-card:not(.s2),
+.alumni-dir:has(#seg-3:checked) .co-card:not(.s3),
+.alumni-dir:has(#seg-4:checked) .co-card:not(.s4),
+.alumni-dir:has(#seg-5:checked) .co-card:not(.s5),
+.alumni-dir:has(#seg-6:checked) .co-card:not(.s6),
+.alumni-dir:has(#seg-7:checked) .co-card:not(.s7),
+.alumni-dir:has(#reg-1:checked) .co-card:not(.r1),
+.alumni-dir:has(#reg-2:checked) .co-card:not(.r2),
+.alumni-dir:has(#reg-3:checked) .co-card:not(.r3),
+.alumni-dir:has(#reg-4:checked) .co-card:not(.r4),
+.alumni-dir:has(#reg-5:checked) .co-card:not(.r5),
+.alumni-dir:has(#reg-6:checked) .co-card:not(.r6),
+.alumni-dir:has(#reg-7:checked) .co-card:not(.r7),
+.alumni-dir:has(#reg-8:checked) .co-card:not(.r8),
+.alumni-dir:has(#reg-9:checked) .co-card:not(.r9),
+.alumni-dir:has(#per-1:checked) .co-card:not(.p1),
+.alumni-dir:has(#per-2:checked) .co-card:not(.p2),
+.alumni-dir:has(#per-3:checked) .co-card:not(.p3),
+.alumni-dir:has(#per-4:checked) .co-card:not(.p4),
+.alumni-dir:has(#per-5:checked) .co-card:not(.p5),
+.alumni-dir:has(#per-6:checked) .co-card:not(.p6) { display:none; }
+
+/* 最近在做的事 */
+.alumni-doing { background:var(--white); border-top:1px solid var(--line); }
+.alumni-news { border-top:1px solid var(--ink); }
+.alumni-news-row { display:grid; grid-template-columns:84px 168px minmax(0,1fr) 130px; gap:18px; align-items:baseline; padding:11px 0; border-bottom:1px solid var(--line); font-size:12px; color:var(--muted); }
+.alumni-news-row time { font-size:10.5px; color:#9a9da0; font-variant-numeric:tabular-nums; }
+.alumni-news-row b { font-size:13px; font-weight:620; color:var(--ink); }
+.alumni-news-row span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.alumni-news-row em { font-style:normal; font-size:10.5px; text-align:right; color:#9a9da0; }
+.alumni-news-row:hover span { color:var(--ink); }
+
+/* 三家校友公司 */
+.alumni-events .event-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin:34px 0 26px; background:rgba(255,255,255,.16); }
+.event-stats article { display:flex; flex-direction:column; gap:6px; padding:16px 18px; background:var(--dark); }
+.event-stats strong { font-size:clamp(24px,2.4vw,34px); font-weight:640; letter-spacing:-.03em; line-height:1; color:#fff; }
+.event-stats span { font-size:10.5px; color:rgba(255,255,255,.55); }
+.event-months { display:flex; flex-wrap:wrap; gap:4px 18px; padding:12px 0 0; border-top:1px solid rgba(255,255,255,.2); }
+.event-option { position:relative; font-size:12px; color:rgba(255,255,255,.62); cursor:pointer; }
+.event-option input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer; }
+.event-option span { padding:3px 0; border-bottom:2px solid transparent; }
+.event-option:hover span { color:#fff; }
+.event-option input:checked+span { color:#fff; border-bottom-color:var(--orange); }
+.event-option input:focus-visible+span { outline:1px solid var(--orange); outline-offset:2px; }
+.event-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 48px; margin-top:18px; border-top:1px solid rgba(255,255,255,.2); }
+.ev-row { display:grid; grid-template-columns:86px minmax(0,1fr) 64px; gap:12px; align-items:baseline; padding:11px 0; border-bottom:1px solid rgba(255,255,255,.12); font-size:12px; }
+.ev-row time { font-size:10.5px; color:rgba(255,255,255,.5); font-variant-numeric:tabular-nums; }
+.ev-row b { display:block; font-size:12.5px; font-weight:520; color:#fff; }
+.ev-row span { font-size:10.5px; color:rgba(255,255,255,.45); }
+.ev-row em { font-style:normal; font-size:10px; text-align:right; white-space:nowrap; color:rgba(255,255,255,.6); }
+.ev-row em.next { color:var(--orange); }
+
+.alumni-events:has(#ev-1:checked) .event-grid > .ev-row:not(.m1),
+.alumni-events:has(#ev-2:checked) .event-grid > .ev-row:not(.m2),
+.alumni-events:has(#ev-3:checked) .event-grid > .ev-row:not(.m3),
+.alumni-events:has(#ev-4:checked) .event-grid > .ev-row:not(.m4),
+.alumni-events:has(#ev-5:checked) .event-grid > .ev-row:not(.m5),
+.alumni-events:has(#ev-6:checked) .event-grid > .ev-row:not(.m6),
+.alumni-events:has(#ev-7:checked) .event-grid > .ev-row:not(.m7),
+.alumni-events:has(#ev-8:checked) .event-grid > .ev-row:not(.m8),
+.alumni-events:has(#ev-9:checked) .event-grid > .ev-row:not(.m9),
+.alumni-events:has(#ev-10:checked) .event-grid > .ev-row:not(.m10),
+.alumni-events:has(#ev-11:checked) .event-grid > .ev-row:not(.m11),
+.alumni-events:has(#ev-12:checked) .event-grid > .ev-row:not(.m12) { display:none; }
+
+@media (max-width:1180px) {
+  .alumni-grid { grid-template-columns:repeat(4,1fr); }
+  .alumni-news-row { grid-template-columns:76px 150px minmax(0,1fr); }
+  .alumni-news-row em { text-align:left; }
+  .event-grid { grid-template-columns:1fr; }
+}
+
+@media (max-width:980px) {
+  .alumni-grid { grid-template-columns:repeat(3,1fr); }
+}
+
+@media (max-width:760px) {
+  .filter-row { grid-template-columns:1fr; gap:6px; }
+  .filter-row>span { padding:0; }
+  .alumni-table { padding-top:20px; }
+  .alumni-grid { grid-template-columns:repeat(2,1fr); }
+  .co-card summary { padding:13px 13px 15px; }
+  .co-name { font-size:14.5px; }
+  .co-open { grid-template-columns:1fr; gap:16px; padding:16px; }
+  .alumni-news-row { grid-template-columns:1fr; gap:2px; padding:12px 0; }
+  .alumni-news-row em { text-align:left; }
+  .alumni-events .event-stats { grid-template-columns:1fr 1fr; }
+  .alumni-glance article:last-child { grid-column:1/-1; }
+}
+
+.alumni-jump { display:flex; flex-wrap:wrap; gap:12px 28px; padding:22px 0; font-size:14px; }
+.alumni-filter-panel>summary { display:none; }
+.alumni-jump a:hover { text-decoration:underline; }
+.alumni-jump a:focus-visible,.alumni-reset:focus-visible,.alumni-news-more summary:focus-visible { outline:2px solid var(--ink); outline-offset:4px; }
+:is(#companies,#news,#events) { scroll-margin-top:24px; }
+.alumni-reset { margin:12px 0; border:1px solid var(--line); background:var(--white); color:var(--ink); padding:9px 14px; font:inherit; font-size:13px; cursor:pointer; }
+.alumni-reset:disabled { color:var(--muted); cursor:default; }
+.co-intro { font-size:14px; line-height:1.8; overflow-wrap:anywhere; }
+.co-detail { margin:8px 0; font-size:13px; color:var(--muted); }
+.co-full,.alumni-news-row time,.alumni-news-row em,.co-meta,.co-seg { color:var(--muted); }
+.co-links { overflow-wrap:anywhere; }
+.alumni-news-row span { white-space:normal; overflow:visible; overflow-wrap:anywhere; }
+.alumni-news-row em { overflow-wrap:anywhere; }
+.alumni-news-more { margin-top:20px; }
+.alumni-news-more summary { padding:12px 0; font-size:14px; cursor:pointer; }
+.event-upcoming { margin:30px 0; }
+.event-upcoming h3,.event-year-heading { font-size:18px; font-weight:520; }
+.ev-place { display:block; }
+.event-empty { display:none; grid-column:1/-1; color:#fff; }
+.alumni-events:has(.event-option input[id]:checked) .event-empty { display:block; }
+/* Match the filter's specificity so non-selected empty months stay hidden. */
+.alumni-events:has(#ev-1:checked) .event-empty:not(.m1),
+.alumni-events:has(#ev-2:checked) .event-empty:not(.m2),
+.alumni-events:has(#ev-3:checked) .event-empty:not(.m3),
+.alumni-events:has(#ev-4:checked) .event-empty:not(.m4),
+.alumni-events:has(#ev-5:checked) .event-empty:not(.m5),
+.alumni-events:has(#ev-6:checked) .event-empty:not(.m6),
+.alumni-events:has(#ev-7:checked) .event-empty:not(.m7),
+.alumni-events:has(#ev-8:checked) .event-empty:not(.m8),
+.alumni-events:has(#ev-9:checked) .event-empty:not(.m9),
+.alumni-events:has(#ev-10:checked) .event-empty:not(.m10),
+.alumni-events:has(#ev-11:checked) .event-empty:not(.m11),
+.alumni-events:has(#ev-12:checked) .event-empty:not(.m12) { display:none; }
+[hidden] { display:none!important; }
+@media (max-width:760px) {
+  .alumni-glance { padding-top:20px; padding-bottom:20px; min-height:0; }
+  .alumni-intro .section-head { gap:16px; margin-bottom:12px; }
+  .alumni-intro .lede { margin-bottom:0; font-size:13px; }
+  .alumni-jump { padding:16px 0; }
+  .alumni-filter-panel>summary { display:list-item; cursor:pointer; padding:14px 0; font-size:13px; }
+  .alumni-filter-panel>summary:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+  .alumni-glance>div { grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+  .alumni-glance article { min-height:0; padding:0; }
+  .alumni-glance article:last-child { grid-column:auto; }
+  .alumni-glance strong { font-size:28px; }
+  .alumni-glance span { font-size:11px; }
+  .alumni-intro { padding-top:32px; }
+  .alumni-events .event-stats article { padding:14px; }
+  .alumni-events .event-stats span { font-size:12px; }
+  .alumni-search input { font-size:16px; }
+  .ev-row { grid-template-columns:64px minmax(0,1fr) 48px; gap:8px; }
+}
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .co-card, .co-plus { transition:none!important; } }
+
+/* The new seventh homepage entry completes its own row without changing the existing six. */
+.explore-grid>a:last-child:nth-child(3n + 1) { grid-column:1/-1; }

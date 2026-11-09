@@ -11,7 +11,7 @@ const chrome = spawn(CHROME, [
   '--no-first-run', '--disable-gpu', '--hide-scrollbars', 'about:blank',
 ], { stdio: 'ignore' });
 
-const ROUTES = ['/zh/', '/zh/about/', '/zh/programs/', '/zh/ventures/', '/zh/insight/', '/zh/global/', '/zh/proof/', '/en/', '/en/about/', '/en/programs/', '/en/ventures/', '/en/insight/', '/en/global/', '/en/proof/'];
+const ROUTES = ['/zh/', '/zh/about/', '/zh/programs/', '/zh/ventures/', '/zh/insight/', '/zh/global/', '/zh/proof/', '/zh/alumni/', '/en/', '/en/about/', '/en/programs/', '/en/ventures/', '/en/insight/', '/en/global/', '/en/proof/', '/en/alumni/'];
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function target() {

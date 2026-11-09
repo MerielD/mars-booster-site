@@ -29,7 +29,7 @@ export type SiteCopy = {
 export const copies: Record<Locale, SiteCopy> = {
   zh: {
     lang: 'zh', logoAlt: '火星加速器', menuLabel: '打开导航', switchLabel: 'EN', switchHref: '../en/',
-    nav: ['关于火星', '创始人项目', '孵化与产业', '行业洞察', '全球连接', '成果案例', '联系申请'],
+    nav: ['关于火星', '创始人项目', '孵化与产业', '行业洞察', '全球连接', '成果案例', '校友生态', '联系申请'],
     heroKicker: '物理AI创始人加速与创新生态平台', heroLines: ['从技术到市场，', '从中国到全球'],
     heroSummary: '连接创始人、产业与市场，陪伴新一代科技创业者完成从专家到创始人、从产品到真实市场、从中国到全球的关键跨越。',
     heroCta: '认识火星', heroMarker: '上海 · 苏州 · 深圳 · 北京',
@@ -151,11 +151,12 @@ export const copies: Record<Locale, SiteCopy> = {
       { title: '行业洞察', body: '研究报告、社区图谱与从业者内容', href: 'insight' },
       { title: '成果案例', body: '创始人关键结果与社区声音', href: 'proof' },
       { title: '全球连接', body: '从中国市场走向全球', href: 'global' },
+      { title: '校友生态', body: '公司名录、近期动态与活动课程', href: 'alumni' },
     ],
   },
   en: {
     lang: 'en', logoAlt: 'Mars Booster', menuLabel: 'Open navigation', switchLabel: '中文', switchHref: '../zh/',
-    nav: ['About', 'Programs', 'Ventures & Industry', 'Insight', 'Global', 'Proof', 'Contact'],
+    nav: ['About', 'Programs', 'Ventures & Industry', 'Insight', 'Global', 'Proof', 'Alumni', 'Contact'],
     heroKicker: 'Founder Acceleration & Innovation Ecosystem for Physical AI', heroLines: ['From technology to market.', 'From China to the world.'],
     heroSummary: 'We connect founders, industry and markets—helping technology entrepreneurs cross from expert to founder, product to real market, and China to the world.',
     heroCta: 'Meet Mars Booster', heroMarker: 'SHANGHAI · SUZHOU · SHENZHEN · BEIJING',
@@ -277,6 +278,7 @@ export const copies: Record<Locale, SiteCopy> = {
       { title: 'Insight', body: 'Research, the community map and founder-led media', href: 'insight' },
       { title: 'Proof & outcomes', body: 'Founders’ key results and community voices', href: 'proof' },
       { title: 'Global', body: 'From China to global markets', href: 'global' },
+      { title: 'Alumni ecosystem', body: 'Company directory, recent news and community events', href: 'alumni' },
     ],
   },
 };
