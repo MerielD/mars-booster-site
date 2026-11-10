@@ -134,6 +134,34 @@ function NewsRow({ n }: { n: AlumniNews }) {
   );
 }
 
+function EventArchive({ events, locale }: { events: AlumniEvent[]; locale: Locale }) {
+  const ui = alumniUi[locale];
+  return (
+    <div className="event-archive" aria-describedby="event-year-note">
+      {Array.from({ length: 13 }, (_, month) => {
+        // Separate static views keep the first-five preview correct even without JavaScript.
+        const matching = month ? events.filter((event) => monthIndex.get(event.month) === month) : events;
+        return (
+          <div key={month} className={`event-archive-view ${month ? `m${month}` : 'event-archive-all'}`}>
+            <div className="event-grid" aria-describedby="event-year-note">
+              {matching.slice(0, 5).map((event) => <EventRow key={event.id} e={event} locale={locale} />)}
+              {!matching.length ? <p className="ev-row event-archive-empty">{ui.emptyMonth}</p> : null}
+            </div>
+            {matching.length > 5 ? (
+              <details className="event-archive-more">
+                <summary><span className="event-expand-label">{ui.expandEvents.replace('{count}', String(matching.length - 5))}</span><span className="event-collapse-label">{ui.collapseEvents}</span></summary>
+                <div className="event-grid" aria-describedby="event-year-note">
+                  {matching.slice(5).map((event) => <EventRow key={event.id} e={event} locale={locale} />)}
+                </div>
+              </details>
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function NewsGroup({ title, news, locale, kind }: { title: string; news: AlumniNews[]; locale: Locale; kind: string }) {
   if (!news.length) return null;
   return (
@@ -296,7 +324,6 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
         <div className="cooperation-heading">
           <p className="kicker">{ui.cooperation}</p>
           <h2>{ui.cooperationTitle}</h2>
-          <p className="cooperation-source">{ui.cooperationSource}</p>
         </div>
         <dl className="cooperation-stats">
           {cooperationSummary.metrics.map((metric) => (
@@ -309,7 +336,6 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
         <div className="cooperation-cases" aria-labelledby="cooperation-cases-title">
           <div className="cooperation-cases-heading">
             <h3 id="cooperation-cases-title">{ui.cooperationCases}</h3>
-            <p className="cooperation-source">{ui.cooperationCasesSource}</p>
           </div>
           <div className="cooperation-case-grid">
             {cooperationCases.map((item) => {
@@ -377,14 +403,7 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
             </label>
           ))}
         </div>
-        <div className="event-grid" aria-describedby="event-year-note">
-          {A.events.map((e) => (
-            <EventRow key={e.id} e={e} locale={locale} />
-          ))}
-          {Array.from({ length: 12 }, (_, i) => i + 1).filter((m) => !A.events.some((e) => monthIndex.get(e.month) === m)).map((m) => (
-            <p className={`ev-row event-empty m${m}`} key={m}>{ui.emptyMonth}</p>
-          ))}
-        </div>
+        <EventArchive events={A.events} locale={locale} />
       </section>
       <script src="../../assets/alumni.js" defer data-keep="alumni" />
     </>

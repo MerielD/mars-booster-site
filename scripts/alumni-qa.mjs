@@ -123,9 +123,14 @@ try {
   await evaluate("document.getElementById('ev-2').click()");
   assert.equal(await evaluate("[...document.querySelectorAll('.event-upcoming .ev-row')].filter(e=>getComputedStyle(e).display!=='none').length"), 5, 'Archive month does not filter upcoming events');
   assert.deepEqual(await evaluate("Object.fromEntries([...document.querySelectorAll('.event-format-card')].map(e=>[e.dataset.eventType,Number(e.querySelector('.event-format-count').textContent)]))"), expectedTypeCounts, 'Month filtering does not change annual format totals');
-  assert.equal(await evaluate("getComputedStyle(document.querySelector('.event-empty')).display"), 'block');
-  assert.equal(await evaluate("[...document.querySelectorAll('.event-grid .ev-row:not(.event-empty)')].filter(e=>getComputedStyle(e).display!=='none').length"), 0);
+  assert.equal(await evaluate("document.querySelector('.event-archive-view.m2 .event-archive-empty').checkVisibility()"), true);
+  assert.equal(await evaluate("[...document.querySelectorAll('.event-archive .ev-row:not(.event-archive-empty)')].filter(e=>e.checkVisibility()).length"), 0);
   await evaluate("document.querySelector('input[name=\"event-month\"]').click();document.querySelector('.co-card summary').focus()");
+  assert.equal(await evaluate("[...document.querySelectorAll('.event-archive .ev-row')].filter(e=>e.checkVisibility()).length"), 5, 'Archive previews five records');
+  await evaluate("document.querySelector('.event-archive-all summary').click()");
+  assert.equal(await evaluate("[...document.querySelectorAll('.event-archive .ev-row')].filter(e=>e.checkVisibility()).length"), eventSnapshot.length, 'Expand reveals the remaining records');
+  await evaluate("document.querySelector('.event-archive-all summary').click();document.querySelector('.co-card summary').focus()");
+  assert.equal(await evaluate("[...document.querySelectorAll('.event-archive .ev-row')].filter(e=>e.checkVisibility()).length"), 5, 'Collapse restores the preview');
   assert.equal(await evaluate("document.activeElement.tagName"), 'SUMMARY', 'Card summary receives keyboard focus');
   await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
@@ -158,7 +163,7 @@ try {
   assert.equal(await visible(), 1, 'Undisclosed-region filter also works without scripts');
   assert.equal(await evaluate("[...document.querySelectorAll('.co-card')].find(e=>getComputedStyle(e).display!=='none').dataset.companyId"), 'client-company-yijie-zhichuang');
   await evaluate("document.getElementById('ev-2').click()");
-  assert.equal(await evaluate("getComputedStyle(document.querySelector('.event-empty')).display"), 'block', 'Empty-month fallback needs no script');
+  assert.equal(await evaluate("document.querySelector('.event-archive-view.m2 .event-archive-empty').checkVisibility()"), true, 'Empty-month fallback needs no script');
   await send('Emulation.setScriptExecutionDisabled', { value: false });
   for (const width of [1440, 768, 390, 375]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 700 });

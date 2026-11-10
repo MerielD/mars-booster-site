@@ -497,18 +497,6 @@ img { display:block; max-width:100%; }
 .ev-row em { font-style:normal; font-size:var(--alumni-font-status); text-align:right; overflow-wrap:anywhere; color:rgba(255,255,255,.7); }
 .ev-row em.next { color:var(--orange); }
 
-.alumni-events:has(#ev-1:checked) .event-grid > .ev-row:not(.m1),
-.alumni-events:has(#ev-2:checked) .event-grid > .ev-row:not(.m2),
-.alumni-events:has(#ev-3:checked) .event-grid > .ev-row:not(.m3),
-.alumni-events:has(#ev-4:checked) .event-grid > .ev-row:not(.m4),
-.alumni-events:has(#ev-5:checked) .event-grid > .ev-row:not(.m5),
-.alumni-events:has(#ev-6:checked) .event-grid > .ev-row:not(.m6),
-.alumni-events:has(#ev-7:checked) .event-grid > .ev-row:not(.m7),
-.alumni-events:has(#ev-8:checked) .event-grid > .ev-row:not(.m8),
-.alumni-events:has(#ev-9:checked) .event-grid > .ev-row:not(.m9),
-.alumni-events:has(#ev-10:checked) .event-grid > .ev-row:not(.m10),
-.alumni-events:has(#ev-11:checked) .event-grid > .ev-row:not(.m11),
-.alumni-events:has(#ev-12:checked) .event-grid > .ev-row:not(.m12) { display:none; }
 
 @media (max-width:1180px) {
   .alumni-grid { grid-template-columns:repeat(4,1fr); }
@@ -549,7 +537,6 @@ img { display:block; max-width:100%; }
 .alumni-cooperation { padding-top:clamp(64px,6vw,96px); padding-bottom:clamp(64px,6vw,96px); border-top:1px solid var(--line); background:var(--paper); }
 .cooperation-heading { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:0 var(--alumni-space-group); align-items:end; }
 .cooperation-heading .kicker { grid-column:1/-1; }
-.cooperation-source { margin:0; color:var(--muted); font-size:var(--alumni-font-meta); line-height:1.65; }
 .cooperation-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(24px,3vw,48px); margin:40px 0 0; }
 .cooperation-stats>div { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--alumni-space-related); align-content:start; padding:var(--alumni-space-group) 0 0; border-top:1px solid var(--line); }
 .cooperation-stats dt { grid-row:2; font-size:var(--alumni-font-body); line-height:1.65; color:var(--muted); }
@@ -612,22 +599,28 @@ img { display:block; max-width:100%; }
 }
 .event-upcoming { margin:30px 0; }
 .event-upcoming h3,.event-year-heading { font-size:var(--alumni-font-subheading); font-weight:520; }
+.event-archive-view { display:none; }
+.event-archive-all { display:block; }
+.alumni-events:has(.event-option input[id]:checked) .event-archive-all { display:none; }
+.alumni-events:has(#ev-1:checked) .event-archive-view.m1,
+.alumni-events:has(#ev-2:checked) .event-archive-view.m2,
+.alumni-events:has(#ev-3:checked) .event-archive-view.m3,
+.alumni-events:has(#ev-4:checked) .event-archive-view.m4,
+.alumni-events:has(#ev-5:checked) .event-archive-view.m5,
+.alumni-events:has(#ev-6:checked) .event-archive-view.m6,
+.alumni-events:has(#ev-7:checked) .event-archive-view.m7,
+.alumni-events:has(#ev-8:checked) .event-archive-view.m8,
+.alumni-events:has(#ev-9:checked) .event-archive-view.m9,
+.alumni-events:has(#ev-10:checked) .event-archive-view.m10,
+.alumni-events:has(#ev-11:checked) .event-archive-view.m11,
+.alumni-events:has(#ev-12:checked) .event-archive-view.m12 { display:block; }
+.event-archive-more { margin-top:20px; }
+.event-archive-more summary { width:fit-content; cursor:pointer; color:#fff; font-size:var(--alumni-font-control); line-height:1.65; padding:8px 0; }
+.event-archive-more summary:focus-visible { outline:2px solid var(--orange); outline-offset:4px; }
+.event-archive-more .event-collapse-label,.event-archive-more[open] .event-expand-label { display:none; }
+.event-archive-more[open] .event-collapse-label { display:inline; }
 .ev-place { display:block; }
-.event-empty { display:none; grid-column:1/-1; color:#fff; }
-.alumni-events:has(.event-option input[id]:checked) .event-empty { display:block; }
-/* Match the filter's specificity so non-selected empty months stay hidden. */
-.alumni-events:has(#ev-1:checked) .event-empty:not(.m1),
-.alumni-events:has(#ev-2:checked) .event-empty:not(.m2),
-.alumni-events:has(#ev-3:checked) .event-empty:not(.m3),
-.alumni-events:has(#ev-4:checked) .event-empty:not(.m4),
-.alumni-events:has(#ev-5:checked) .event-empty:not(.m5),
-.alumni-events:has(#ev-6:checked) .event-empty:not(.m6),
-.alumni-events:has(#ev-7:checked) .event-empty:not(.m7),
-.alumni-events:has(#ev-8:checked) .event-empty:not(.m8),
-.alumni-events:has(#ev-9:checked) .event-empty:not(.m9),
-.alumni-events:has(#ev-10:checked) .event-empty:not(.m10),
-.alumni-events:has(#ev-11:checked) .event-empty:not(.m11),
-.alumni-events:has(#ev-12:checked) .event-empty:not(.m12) { display:none; }
+.event-archive-empty { display:block; grid-column:1/-1; color:#fff; }
 [hidden] { display:none!important; }
 @media (max-width:760px) {
   .alumni-glance { padding-top:20px; padding-bottom:20px; min-height:0; }

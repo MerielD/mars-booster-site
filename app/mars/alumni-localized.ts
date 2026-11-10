@@ -81,7 +81,7 @@ export function localizedAlumni(locale: Locale): AlumniData {
 
 export const alumniUi = {
   zh: {
-    all: '全部', directory: '校友名录', title: '找公司，看生态', data: '数据来自 Mars Booster 社区数据库，更新于',
+    all: '全部', directory: '校友名录', title: '找公司，看生态', data: '更新于',
     contents: '本页内容', companies: '公司', news: '动态', proof: '合作成果', events: '活动', scale: '校友生态规模', asOf: '截至',
     companyUnit: '家公司', countUnit: '家公司', alumniUnit: '位校友', segmentUnit: '个产业环节', regionUnit: '个地区', eventUnit: '场活动与课程',
     search: '搜索公司', placeholder: '搜公司、方向，比如 灵巧手、巡检、陪伴', reset: '清除筛选', filters: '按环节、地区、期数筛选',
@@ -94,11 +94,11 @@ export const alumniUi = {
     annualPhoto: '2026 年活动现场', annualPhotoNote: 'CES 考察与海外交流',
     eventFormatsTitle: '六类活动与课程', eventFormatsNote: '{year} 年数量含已办与排期；配图含往期现场。',
     capitalNews: '融资与上市', otherNews: '更多校友进展',
-    cooperation: '校友合作', cooperationTitle: '合作累计', cooperationSource: '累计数据由火星提供',
-    cooperationCases: '校友合作案例', cooperationCasesSource: '来源：火星公司介绍 PPT · 案例数据为材料所载',
+    cooperation: '校友合作', cooperationTitle: '合作累计', cooperationCases: '校友合作案例',
+    expandEvents: '展开其余 {count} 条', collapseEvents: '收起',
   },
   en: {
-    all: 'All', directory: 'Company directory', title: 'Find companies. Explore the ecosystem.', data: 'Source: Mars Booster community database. Updated',
+    all: 'All', directory: 'Company directory', title: 'Find companies. Explore the ecosystem.', data: 'Updated',
     contents: 'On this page', companies: 'Companies', news: 'News', proof: 'Outcomes', events: 'Events', scale: 'Community at a glance', asOf: 'As of',
     companyUnit: 'companies', countUnit: 'companies', alumniUnit: 'alumni', segmentUnit: 'industry segments', regionUnit: 'regions', eventUnit: 'events & courses',
     search: 'Search companies', placeholder: 'Search companies or capabilities', reset: 'Clear filters', filters: 'Filter by segment, region or cohort',
@@ -111,7 +111,7 @@ export const alumniUi = {
     annualPhoto: 'Events in 2026', annualPhotoNote: 'CES visits & overseas exchanges',
     eventFormatsTitle: 'Six ways to take part', eventFormatsNote: 'Counts include completed and scheduled events in {year}. Photos include past gatherings.',
     capitalNews: 'Funding & listings', otherNews: 'More company updates',
-    cooperation: 'Alumni collaboration', cooperationTitle: 'Cumulative impact', cooperationSource: 'Cumulative figures supplied by Mars Booster',
-    cooperationCases: 'Alumni collaboration cases', cooperationCasesSource: 'Source: Mars Booster company-profile presentation; figures as reported in the material',
+    cooperation: 'Alumni collaboration', cooperationTitle: 'Cumulative impact', cooperationCases: 'Alumni collaboration cases',
+    expandEvents: 'Show {count} more', collapseEvents: 'Show less',
   },
 };
