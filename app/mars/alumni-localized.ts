@@ -4,6 +4,7 @@ import { alumni, type AlumniData } from './alumni-data';
 import type { Locale } from './content';
 
 const dictionary: Record<string, string> = {
+  '未披露': 'Not disclosed',
   '本体与场景应用': 'Robots & applications', '数据及基础设施': 'Data & infrastructure',
   '感知与交互': 'Sensing & interaction', '大小脑与神经网络': 'AI models & neural networks',
   '驱动与执行系统': 'Drive & actuation', '操作与末端执行': 'Manipulation & end effectors', '能源与动力系统': 'Energy & power',
@@ -93,6 +94,7 @@ export const alumniUi = {
     annualPhoto: '2026 年活动现场', annualPhotoNote: 'CES 考察与海外交流',
     eventFormatsTitle: '六类活动与课程', eventFormatsNote: '{year} 年数量含已办与排期；配图含往期现场。',
     capitalNews: '融资与上市', otherNews: '更多校友进展',
+    cooperation: '校友合作', cooperationTitle: '合作累计', cooperationSource: '累计数据由火星提供',
   },
   en: {
     all: 'All', directory: 'Company directory', title: 'Find companies. Explore the ecosystem.', data: 'Source: Mars Booster community database. Updated',
@@ -108,5 +110,6 @@ export const alumniUi = {
     annualPhoto: 'Events in 2026', annualPhotoNote: 'CES visits & overseas exchanges',
     eventFormatsTitle: 'Six ways to take part', eventFormatsNote: 'Counts include completed and scheduled events in {year}. Photos include past gatherings.',
     capitalNews: 'Funding & listings', otherNews: 'More company updates',
+    cooperation: 'Alumni collaboration', cooperationTitle: 'Cumulative impact', cooperationSource: 'Cumulative figures supplied by Mars Booster',
   },
 };

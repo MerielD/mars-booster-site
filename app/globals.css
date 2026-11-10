@@ -370,7 +370,7 @@ img { display:block; max-width:100%; }
 /* ── 校友生态（round 01）───────────────────────────────────────────── */
 
 /* Values preserve the accepted Round 03 layout; tokens are local to alumni sections. */
-:where(.alumni-intro,.alumni-glance,.alumni-dir,.alumni-doing,.alumni-events) {
+:where(.alumni-intro,.alumni-glance,.alumni-dir,.alumni-doing,.alumni-cooperation,.alumni-events) {
   --alumni-font-caption:12px;
   --alumni-font-status:13px;
   --alumni-font-meta:14px;
@@ -388,7 +388,7 @@ img { display:block; max-width:100%; }
   --alumni-space-group:24px;
 }
 @media (max-width:760px) {
-  :where(.alumni-intro,.alumni-glance,.alumni-dir,.alumni-doing,.alumni-events) {
+  :where(.alumni-intro,.alumni-glance,.alumni-dir,.alumni-doing,.alumni-cooperation,.alumni-events) {
     --alumni-font-company:17px;
     --alumni-font-detail-title:20px;
     --alumni-font-hero:26px;
@@ -459,6 +459,7 @@ img { display:block; max-width:100%; }
 .alumni-dir:has(#reg-7:checked) .co-card:not(.r7),
 .alumni-dir:has(#reg-8:checked) .co-card:not(.r8),
 .alumni-dir:has(#reg-9:checked) .co-card:not(.r9),
+.alumni-dir:has(#reg-10:checked) .co-card:not(.r10),
 .alumni-dir:has(#per-1:checked) .co-card:not(.p1),
 .alumni-dir:has(#per-2:checked) .co-card:not(.p2),
 .alumni-dir:has(#per-3:checked) .co-card:not(.p3),
@@ -545,6 +546,20 @@ img { display:block; max-width:100%; }
 
 .alumni-news-more { margin-top:20px; }
 .alumni-news-more summary { padding:var(--alumni-space-related) 0; font-size:var(--alumni-font-control); cursor:pointer; }
+.alumni-cooperation { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(32px,6vw,80px); border-top:1px solid var(--line); background:var(--white); }
+.cooperation-heading h2 { margin:0 0 var(--alumni-space-group); font-size:var(--alumni-font-page); font-weight:620; line-height:1.12; letter-spacing:-.04em; }
+.cooperation-source { margin:0; color:var(--muted); font-size:var(--alumni-font-meta); line-height:1.65; }
+.cooperation-stats { margin:0; }
+.cooperation-stats>div { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:var(--alumni-space-group); align-items:baseline; padding:var(--alumni-space-group) 0; border-top:1px solid var(--line); }
+.cooperation-stats dt { grid-column:2; grid-row:1; font-size:var(--alumni-font-body); line-height:1.65; color:var(--muted); }
+.cooperation-stats dd { grid-column:1; grid-row:1; margin:0; font-size:var(--alumni-font-feature); font-weight:650; letter-spacing:-.03em; line-height:1.2; overflow-wrap:anywhere; }
+@media (max-width:980px) {
+  .alumni-cooperation { grid-template-columns:1fr; gap:32px; }
+}
+@media (max-width:760px) {
+  .cooperation-stats>div { grid-template-columns:1fr; gap:var(--alumni-space-related); }
+  .cooperation-stats dt { grid-column:1; grid-row:2; }
+}
 .news-group-heading { margin:36px 0 14px; font-size:var(--alumni-font-subheading); line-height:1.4; font-weight:600; }
 .event-year-note { margin:48px 0 28px; padding-top:28px; border-top:1px solid rgba(255,255,255,.2); font-size:var(--alumni-font-meta); line-height:1.65; color:rgba(255,255,255,.7); }
 .alumni-event-hero { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); margin:0; background:#171a1c; }

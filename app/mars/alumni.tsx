@@ -1,11 +1,12 @@
 /* eslint-disable @next/next/no-img-element -- Static export uses pre-sized, compressed WebP assets. */
 import { alumni, type AlumniCompany, type AlumniEvent, type AlumniNews } from './alumni-data';
 import { alumniUi, localizedAlumni } from './alumni-localized';
-import { capitalFeatures, eventFormats, eventIdsByFormat, eventPhotos, eventYear, isCapitalNews } from './alumni-editorial';
+import { capitalFeatures, cooperationSummary, eventFormats, eventIdsByFormat, eventPhotos, eventYear, isCapitalNews } from './alumni-editorial';
 import type { Locale } from './content';
 
 const A = alumni;
 const total = A.companies.length;
+const disclosedRegions = A.stats.byRegion.filter((region) => region.name !== '未披露').length;
 const year = eventYear;
 const scheduled = A.events.filter((e) => {
   const date = e.date.match(/^(\d{1,2})\.(\d{1,2})/);
@@ -78,9 +79,7 @@ function CompanyCard({ c, locale }: { c: AlumniCompany; locale: Locale }) {
           <p className="co-intro">{c.intro}</p>
           {c.subSegment ? <p className="co-detail">{c.subSegment}</p> : null}
           <p className="co-full">
-            {c.fullName}
-            {c.periods.length ? ` · ${c.periods.map(periodLabel).join(' / ')}` : ''}
-            {c.status ? ` · ${c.status}` : ''}
+            {[c.fullName, c.periods.map(periodLabel).join(' / '), c.status].filter(Boolean).join(' · ')}
           </p>
         </div>
         <div className="co-links">
@@ -220,7 +219,7 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
           <article><strong>{total}</strong><span>{ui.companyUnit}</span></article>
           <article><strong>{A.meta.counts.alumni}</strong><span>{ui.alumniUnit}</span></article>
           <article><strong>{A.stats.bySegment.length}</strong><span>{ui.segmentUnit}</span></article>
-          <article><strong>{A.stats.byRegion.length}</strong><span>{ui.regionUnit}</span></article>
+          <article><strong>{disclosedRegions}</strong><span>{ui.regionUnit}</span></article>
           <article><strong>{A.meta.counts.events}</strong><span>{ui.annualEventUnit.replace('{year}', String(year))}</span></article>
         </div>
       </section>
@@ -290,6 +289,22 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
         </div>
         <NewsGroup title={ui.capitalNews} news={remaining.filter((n) => isCapitalNews(n.id))} locale={locale} kind="capital" />
         <NewsGroup title={ui.otherNews} news={remaining.filter((n) => !isCapitalNews(n.id))} locale={locale} kind="other" />
+      </section>
+
+      <section className="section alumni-cooperation" id="cooperation" data-provenance={cooperationSummary.provenance}>
+        <div className="cooperation-heading">
+          <p className="kicker">{ui.cooperation}</p>
+          <h2>{ui.cooperationTitle}</h2>
+          <p className="cooperation-source">{ui.cooperationSource}</p>
+        </div>
+        <dl className="cooperation-stats">
+          {cooperationSummary.metrics.map((metric) => (
+            <div key={metric.id} data-summary-id={metric.id}>
+              <dt>{metric[locale].label}</dt>
+              <dd>{metric[locale].value}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
 
       <section className="section dark-section alumni-events" id="events">

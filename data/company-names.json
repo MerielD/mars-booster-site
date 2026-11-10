@@ -1036,7 +1036,7 @@
     "method": "none"
   },
   "reczz28XSn9mqfFp": {
-    "name": "心元机器人",
+    "name": "心言机器人",
     "nameEn": null,
     "sourceUrl": "https://www.cylingo.com/",
     "verified": false,
@@ -1293,5 +1293,12 @@
     "sourceUrl": null,
     "verified": false,
     "method": "unverified-no-source"
+  },
+  "client-company-yijie-zhichuang": {
+    "name": "意界智创",
+    "nameEn": null,
+    "sourceUrl": "https://finance.sina.com.cn/tech/shenji/2026-07-22/doc-iniirwqk8073512.shtml",
+    "verified": false,
+    "method": "client-confirmed name; article-backed description; English name not established"
   }
 }

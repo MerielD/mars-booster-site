@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const artifact = path.join(root, 'pages-dist');
-const out = path.resolve(root, '../prototype/qa-round03-event-formats');
+const out = path.resolve(root, '../prototype/qa-round03-cooperation-companies');
 const eventSnapshot = JSON.parse(await readFile(path.join(root, 'data/alumni.json'), 'utf8')).events;
 const expectedTypeCounts = {};
 for (const event of eventSnapshot) {
@@ -89,7 +89,7 @@ try {
       assert.equal(metrics.columns, 2, 'Mobile activity statistics use two columns');
       assert(metrics.first < 900, 'First company should be within the first mobile screen');
     }
-    assert.equal(await visible(), 185);
+    assert.equal(await visible(), 186);
     await shot('top-' + width, width);
     evidence.push({ viewport: width, ...metrics });
   }
@@ -118,7 +118,7 @@ try {
   assert.equal(await evaluate("document.getElementById('alumni-empty').hidden"), false);
   await shot('empty-375', 375);
   await evaluate("document.getElementById('alumni-reset').click()");
-  assert.equal(await visible(), 185);
+  assert.equal(await visible(), 186);
   assert.equal(await evaluate("document.activeElement.id"), 'alumni-q');
   await evaluate("document.getElementById('ev-2').click()");
   assert.equal(await evaluate("[...document.querySelectorAll('.event-upcoming .ev-row')].filter(e=>getComputedStyle(e).display!=='none').length"), 5, 'Archive month does not filter upcoming events');
@@ -153,15 +153,18 @@ try {
   assert.equal(await evaluate("getComputedStyle(document.querySelector('.alumni-search')).display"), 'none');
   assert.equal(await evaluate("getComputedStyle(document.getElementById('alumni-count')).display"), 'none');
   await evaluate("document.getElementById('seg-1').click()");
-  assert.equal(await visible(), 70, 'CSS filters work without page scripts');
+  assert.equal(await visible(), 71, 'CSS filters work without page scripts');
+  await evaluate("document.getElementById('reg-10').click()");
+  assert.equal(await visible(), 1, 'Undisclosed-region filter also works without scripts');
+  assert.equal(await evaluate("[...document.querySelectorAll('.co-card')].find(e=>getComputedStyle(e).display!=='none').dataset.companyId"), 'client-company-yijie-zhichuang');
   await evaluate("document.getElementById('ev-2').click()");
   assert.equal(await evaluate("getComputedStyle(document.querySelector('.event-empty')).display"), 'block', 'Empty-month fallback needs no script');
   await send('Emulation.setScriptExecutionDisabled', { value: false });
   for (const width of [1440, 768, 390, 375]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 700 });
     await load('', 'en');
-    assert.equal(await visible(), 185);
-    assert.equal(await evaluate("document.getElementById('alumni-count').textContent"), '185 companies');
+    assert.equal(await visible(), 186);
+    assert.equal(await evaluate("document.getElementById('alumni-count').textContent"), '186 companies');
     assert.equal(await evaluate("document.documentElement.scrollWidth<=innerWidth"), true, 'English layout must not overflow');
     assert.equal(await evaluate("document.querySelector('.alumni-title').textContent"), 'Find companies. Explore the ecosystem.');
     assert.equal(await evaluate("document.querySelectorAll('[data-news-id]').length"), 32);
@@ -176,12 +179,25 @@ try {
     await shot('english-' + width, width);
   }
   await evaluate("document.getElementById('seg-1').click()");
-  assert.equal(await visible(), 70, 'Translated labels preserve segment filter IDs');
+  assert.equal(await visible(), 71, 'Translated labels preserve segment filter IDs');
   await evaluate("document.getElementById('alumni-q').value='HeymanDex';document.getElementById('alumni-q').dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('input[name=\"segment\"]').click()");
   await wait(200);
   assert.equal(await visible(), 1, 'Verified official company name is searchable');
   await evaluate("document.getElementById('alumni-reset').click()");
-  assert.equal(await evaluate("document.getElementById('alumni-count').textContent"), '185 companies', 'Reset stays localized');
+  assert.equal(await evaluate("document.getElementById('alumni-count').textContent"), '186 companies', 'Reset stays localized');
+  for (const locale of ['zh','en']) {
+    await load('?q='+encodeURIComponent('意界智创'),locale);
+    assert.equal(await visible(),1,'New company is searchable in both languages');
+    await evaluate("[...document.querySelectorAll('.co-card')].find(e=>!e.hidden).querySelector('summary').click()");
+    assert.equal(await evaluate("document.querySelector('.co-drawer .co-links a').href"),'https://finance.sina.com.cn/tech/shenji/2026-07-22/doc-iniirwqk8073512.shtml','Article belongs to Yijie, not the renamed company');
+    await shot(`yijie-${locale}-375`,375,await evaluate("document.querySelector('.co-card[open]').getBoundingClientRect().top+scrollY"));
+    await evaluate("document.getElementById('alumni-reset').click();document.getElementById('per-2').click()");
+    assert.equal(await visible(),34,'Cohort 2 company count includes the new company');
+    await load('?q='+encodeURIComponent('心言机器人'),locale);
+    assert.equal(await visible(),1,'Corrected display name is searchable');
+    await evaluate("[...document.querySelectorAll('.co-card')].find(e=>!e.hidden).querySelector('summary').click()");
+    assert.equal(await evaluate("document.querySelector('.co-drawer .co-intro').textContent.includes("+JSON.stringify(locale==='zh'?'心元系列模型':'Xinyuan model series')+")"),true,'Model name is preserved while the company display name changes');
+  }
   // Round 02: row drawers must preserve every summary position in the selected row.
   for (const locale of ['zh', 'en']) {
     for (const width of [1440, 768, 390, 375]) {
@@ -204,6 +220,11 @@ try {
       assert.equal(await evaluate("document.querySelector('.alumni-glance article:last-child').textContent.includes('2026') && document.querySelector('.event-year-heading').textContent.includes('2026') && document.getElementById('event-year-note').textContent.includes('2026')"), true, 'Event year appears at the count and date list');
       assert.equal(await evaluate("document.querySelector('.alumni-glance article:last-child span').textContent"), locale==='zh'?'2026 年活动与课程':'Events & courses in 2026', 'Year cannot be mistaken for the number of events');
       assert.equal(await evaluate("document.querySelector('.event-grid').getAttribute('aria-describedby')"), 'event-year-note');
+      assert.equal(await evaluate("document.querySelector('#cooperation').dataset.provenance"), 'client-provided', 'Cooperation figures are explicitly attributed to the client');
+      assert.equal(await evaluate("document.querySelectorAll('[data-summary-id]').length"), 3, 'Only three aggregate cooperation metrics, no individual cases');
+      assert.equal(await evaluate("document.querySelector('[data-company-id=\"reczz28XSn9mqfFp\"] .co-name').textContent"), '心言机器人', 'Cohort 5 display name corrected in both languages');
+      assert.equal(await evaluate("document.querySelector('[data-company-id=\"client-company-yijie-zhichuang\"]').classList.contains('p2')"), true, 'New company belongs to cohort 2');
+      assert.equal(await evaluate("document.querySelector('[data-company-id=\"reczz28XSn9mqfFp\"]').classList.contains('p5')"), true, 'Renamed company keeps cohort 5');
       assert.equal(await evaluate("document.querySelectorAll('#events img').length"), 7, 'Annual photo plus six activity formats');
       const typeCounts = await evaluate("Object.fromEntries([...document.querySelectorAll('.event-format-card')].map(e=>[e.dataset.eventType,Number(e.querySelector('.event-format-count').textContent)]))");
       assert.deepEqual(typeCounts, expectedTypeCounts, 'Format counts come from canonical event records in both languages');
@@ -222,7 +243,7 @@ try {
       }
       assert.equal(await evaluate("[...document.querySelectorAll('#events img')].every(e=>e.complete && e.naturalWidth>0)"), true, 'All photos load under GitHub project subpath');
       await evaluate("scrollTo({top:0,behavior:'instant'})");
-      for (const index of [1, 5, 8, 184]) {
+      for (const index of [1, 5, 8, 185]) {
         const layout = await evaluate(`(() => {
           const cards=[...document.querySelectorAll('.co-card')];
           const card=cards[${index}];
@@ -253,14 +274,14 @@ try {
       await evaluate("document.getElementById('seg-1').click();[...document.querySelectorAll('.co-card')].filter(c=>getComputedStyle(c).display!=='none').at(-1).querySelector('summary').click()");
       assert.equal(await evaluate("document.querySelector('.co-drawer').previousElementSibling=== [...document.querySelectorAll('.co-card')].filter(c=>getComputedStyle(c).display!=='none').at(-1)"), true, 'Filtered last row');
       await evaluate("document.getElementById('alumni-reset').click()");
-      assert.equal(await evaluate("!document.querySelector('.co-card[open]') && document.querySelectorAll('.co-card>.co-open').length===185"), true, 'Reset restores all content');
+      assert.equal(await evaluate("!document.querySelector('.co-card[open]') && document.querySelectorAll('.co-card>.co-open').length===186"), true, 'Reset restores all content');
       await evaluate("document.querySelectorAll('.co-card summary')[1].click();document.getElementById('reg-1').click()");
       assert.equal(await evaluate("document.querySelector('.co-drawer').hidden"), true, 'Filter closes drawer');
       await evaluate("document.getElementById('alumni-reset').click();document.querySelector('.alumni-filter-panel').open=true");
       await shot(`filters-${locale}-${width}`, width, await evaluate("document.querySelector('.alumni-filters').getBoundingClientRect().top+scrollY"), 1000);
-      for (const selector of ['.alumni-news-row', '#news', '#events', '.alumni-community', '.event-year-note']) {
+      for (const selector of ['.alumni-news-row', '#news', '#cooperation', '#events', '.alumni-community', '.event-year-note']) {
         const top=await evaluate(`document.querySelector('${selector}').getBoundingClientRect().top+scrollY`);
-        const name=selector==='#news'?'featured':selector==='#events'?'events':selector==='.alumni-community'?'community':selector==='.event-year-note'?'annual-records':'timeline';
+        const name=selector==='#news'?'featured':selector==='#cooperation'?'cooperation':selector==='#events'?'events':selector==='.alumni-community'?'community':selector==='.event-year-note'?'annual-records':'timeline';
         const height=name==='community'?await evaluate("Math.ceil(document.querySelector('.alumni-community').getBoundingClientRect().height)+20"):1500;
         await shot(`${name}-${locale}-${width}`, width, top, height);
       }
@@ -321,15 +342,18 @@ try {
       }
     }
   }
-  evidence.push({ legacyCases, projectSubpath: '/mars-booster-site/', english: '185 companies / 63 events / 32 translated news; official-name fallback, search and localized reset PASS' });
+  evidence.push({ legacyCases, projectSubpath: '/mars-booster-site/', english: '186 companies / 63 events / 32 translated news; official-name fallback, search and localized reset PASS' });
   await send('Network.setBlockedURLs', { urls: ['*assets/alumni.js*'] }); await load();
   assert.equal(await evaluate("getComputedStyle(document.querySelector('.alumni-search')).display"), 'none', 'Failed asset keeps unavailable search hidden');
   const html = await readFile(path.join(artifact, 'zh/alumni/index.html'), 'utf8');
-  assert(!/超 3 亿元|超 6 亿元|600\+|发布前逐条核对|6731/.test(html), 'No unverified story blocks or unsupported listing code');
+  const clientSummary = html.match(/<section\b[^>]*id="cooperation"[^>]*>[\s\S]*?<\/section>/)?.[0];
+  assert(clientSummary?.includes('data-provenance="client-provided"'), 'Cooperation totals carry explicit client-provided provenance');
+  assert(!/超 3 亿元|超 6 亿元|600\+|发布前逐条核对|6731/.test(html.replace(clientSummary, '')), 'Client totals are confined to their attributed summary; no old story blocks or unsupported listing code');
   assert.equal((html.match(/<script\b/g) || []).length, 1);
-  evidence.push({ checks: 'search 6, combination 32, zero state, reset, URL reload/popstate, keyboard details, news 105, empty month, no-JS CSS filter 70, script failure, output gate', result: 'PASS' });
+  evidence.push({ checks: 'search 6, combination 32, zero state, reset, URL reload/popstate, keyboard details, news 105, empty month, no-JS CSS filter 71, script failure, output gate', result: 'PASS' });
   evidence.push({ round03: 'explicit 2026 scope, capital-first groups, three same verified selections, unique news IDs, source reporting dates, 7 photos with historical 2025 captions, image loading and bilingual four-width screenshots', result:'PASS' });
   evidence.push({ eventFormats: expectedTypeCounts, checks:'Six bilingual photo cards with titles and descriptions, no audience labels; counts total 63 and are independent of month filtering', result:'PASS' });
+  evidence.push({ cooperation:'Three client-provided cumulative metrics only', companies:'186; Yijie added to cohort 2, Xinyan display name corrected in cohort 5; undisclosed region works without JS', result:'PASS' });
   await writeFile(path.join(out, 'results.json'), JSON.stringify(evidence, null, 2));
   console.log(JSON.stringify(evidence, null, 2));
 } finally { if (ws) ws.close(); chrome.kill(); await new Promise((resolve) => server.close(resolve)); }

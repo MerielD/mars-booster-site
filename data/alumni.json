@@ -3,7 +3,7 @@
     "generatedAt": "2026-11-09",
     "source": "火星校友录-多维表格（Feishu Base WqeXb0ToQa8IOZsW01tc9UDjnte）",
     "counts": {
-      "companies": 185,
+      "companies": 186,
       "alumni": 211,
       "events": 63,
       "news": 105
@@ -21,7 +21,7 @@
       },
       {
         "name": "第 2 期",
-        "count": 33
+        "count": 34
       },
       {
         "name": "第 3 期",
@@ -43,7 +43,7 @@
     "bySegment": [
       {
         "name": "本体与场景应用",
-        "count": 70
+        "count": 71
       },
       {
         "name": "数据及基础设施",
@@ -105,6 +105,10 @@
       },
       {
         "name": "美国",
+        "count": 1
+      },
+      {
+        "name": "未披露",
         "count": 1
       }
     ]
@@ -1169,6 +1173,22 @@
         2
       ],
       "sourceLink": "",
+      "latestNews": null
+    },
+    {
+      "id": "client-company-yijie-zhichuang",
+      "name": "意界智创",
+      "fullName": "",
+      "intro": "聚焦具身智能，围绕机器人本体、运动控制、模型、数据基础设施与训练平台开展全栈研发，在半导体等高端制造场景推进验证。",
+      "website": "",
+      "region": "未披露",
+      "segment": "本体与场景应用",
+      "subSegment": "工业与物流",
+      "status": "",
+      "periods": [
+        2
+      ],
+      "sourceLink": "https://finance.sina.com.cn/tech/shenji/2026-07-22/doc-iniirwqk8073512.shtml",
       "latestNews": null
     },
     {
@@ -2926,7 +2946,7 @@
     },
     {
       "id": "reczz28XSn9mqfFp",
-      "name": "心元机器人",
+      "name": "心言机器人",
       "fullName": "北京力拓飞远科技有限公司",
       "intro": "心言集团是一家专注AI泛心理与情感陪伴的科技企业，以测测App、心元系列模型和家庭陪伴机器人构成从数字服务到具身终端的产品体系。",
       "website": "https://www.cylingo.com/",

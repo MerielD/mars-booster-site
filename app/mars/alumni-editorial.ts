@@ -3,6 +3,30 @@ import { alumni } from './alumni-data';
 // The event snapshot contains month/day dates for this year, not the device's year.
 export const eventYear = 2026;
 
+// Explicitly supplied by the client on 2026-11-10; not independently audited or tied to the event year.
+export const cooperationSummary = {
+  provenance: 'client-provided',
+  receivedAt: '2026-11-10',
+  scope: 'cumulative',
+  metrics: [
+    {
+      id: 'alumni-collaboration',
+      zh: { value: '超 3 亿元', label: '校友之间的合作' },
+      en: { value: '>RMB 300m', label: 'Collaboration between alumni' },
+    },
+    {
+      id: 'fundraising-support',
+      zh: { value: '超 6 亿元', label: '助力校友融资' },
+      en: { value: '>RMB 600m', label: 'Alumni fundraising supported' },
+    },
+    {
+      id: 'community-partners',
+      zh: { value: '600+', label: '社区里的具身产业伙伴' },
+      en: { value: '600+', label: 'Embodied AI industry partners in the community' },
+    },
+  ],
+};
+
 // Classify source records once so translated titles keep the same editorial order.
 const capitalIds = new Set(alumni.news
   .filter((n) => /融资|上市|估值|IPO|募资|挂牌|增发/.test(n.title))
