@@ -1,3 +1,4 @@
+import { imageProps } from './images';
 /* eslint-disable @next/next/no-img-element -- Static export uses pre-sized, compressed WebP assets. */
 import { alumni, type AlumniCompany, type AlumniEvent, type AlumniNews } from './alumni-data';
 import { alumniUi, localizedAlumni } from './alumni-localized';
@@ -165,7 +166,7 @@ function EventFormats({ locale, events }: { locale: Locale; events: AlumniEvent[
           return (
             <article className="event-format-card" key={format.type} data-event-type={format.type}>
               <figure>
-                <img src={`../../assets/alumni/${photo.file}`} alt={photo[locale].alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
+                <img {...imageProps(`alumni/${photo.file}`, '../../', '(max-width: 760px) 100vw, (max-width: 980px) 48vw, 32vw')} alt={photo[locale].alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
                 <figcaption>{photo[locale].caption}</figcaption>
               </figure>
               <div className="event-format-body">
@@ -318,7 +319,8 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
           </p>
         </div>
         <figure className="alumni-event-hero">
-          <img src={`../../assets/alumni/${eventPhotos.annual.file}`} alt={eventPhotos.annual[locale].alt} width={eventPhotos.annual.width} height={eventPhotos.annual.height} loading="lazy" decoding="async" />
+          {/* Warm the anchor destination without competing with first-screen content. */}
+          <img {...imageProps(`alumni/${eventPhotos.annual.file}`, '../../', '(max-width: 760px) 100vw, 55vw')} alt={eventPhotos.annual[locale].alt} width={eventPhotos.annual.width} height={eventPhotos.annual.height} loading="eager" fetchPriority="low" decoding="async" />
           <figcaption>
             <p className="kicker kicker-light">{ui.annualPhoto}</p>
             <h3>{eventPhotos.annual[locale].caption}</h3>

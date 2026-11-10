@@ -6,6 +6,7 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "images:prepare": "node scripts/prepare-images.mjs",
     "dev": "vinext dev",
     "build": "vinext build",
     "build:pages": "vinext build && node scripts/export-github-pages.mjs",
@@ -32,6 +33,7 @@
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
     "react-server-dom-webpack": "19.2.6",
+    "sharp": "0.34.5",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
     "vinext": "1.0.0-beta.3",

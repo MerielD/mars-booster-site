@@ -81,3 +81,12 @@
 验收包括类型检查、改动文件 ESLint、静态导出、隐私及品牌检查，以及中英 1440/768/390/375px Chrome 测试和截图。覆盖行中、行末、最后一行、筛选后抽屉、切换关闭、焦点、断点及 200% 等效重排、最长名称与简介、无脚本回退，保留旧页面 56 个断点组合回归。证据：`../prototype/qa-round02-alumni/`。
 
 发布链路：GitHub main 自动发布 GitHub Pages；`www.marsbooster.net` 由域名 Worker 代理 `mars-booster-site.pages.dev`，须发布并验证 Cloudflare Pages 才能确认 www 更新。
+
+
+## Image delivery (2026-11-10)
+
+Static hosting serves committed WebP variants from `public/assets/optimized/`; no image API or client runtime is required. `app/mars/images.ts` emits relative URLs and responsive `srcset`/`sizes` using the generated manifest. Regenerate with `npm run images:prepare` after editing source photos; commit the manifest and generated images together.
+
+First-screen section photos are eager and high priority. Offscreen content photos are lazy and asynchronously decoded. The annual alumni photo is eager at low priority to warm the events anchor destination; six activity-format cards remain lazy. Mobile cover images need sufficient pixels for their tall crops, rather than simply using the viewport width as their source width. Match image sizes to the 760px / 980px layout breakpoints. Keep legacy pages script-free and preserve the single alumni interaction script.
+
+`node scripts/site-performance.mjs` audits all exported pages at 1440px and 390px with a cold cache, records FCP/LCP/CLS and image bytes, scrolls through every image, and saves screenshots. Add `--mobile-only --throttle` for fixed 150ms latency and 200,000 bytes/s download. Results are lab measurements, not visitor field metrics or evidence of worldwide CDN speed.

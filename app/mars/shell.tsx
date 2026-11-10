@@ -3,9 +3,10 @@
 import type { ReactNode } from 'react';
 import { copies, type Locale } from './content';
 import { ArrowIcon } from './icons';
+import { imageUrl } from './images';
 
 // Depth-aware asset prefix: '' = homepage (../assets), '../' = sub-page (../../assets).
-const asset = (name: string, base: string) => `${base === '' ? '../' : '../../'}assets/ppt/${name}`;
+const asset = (name: string, base: string) => imageUrl(`ppt/${name}`, base === '' ? '../' : '../../');
 
 /**
  * Shared page shell: header + footer. `base` is the relative prefix from the

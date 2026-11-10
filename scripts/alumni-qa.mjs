@@ -230,7 +230,7 @@ try {
       assert.deepEqual(typeCounts, expectedTypeCounts, 'Format counts come from canonical event records in both languages');
       assert.equal(Object.values(typeCounts).reduce((sum,n)=>sum+n,0), eventSnapshot.length, 'The six formats account for every event once');
       assert.equal(await evaluate("[...document.querySelectorAll('.event-format-card')].every(e=>e.querySelector('h4').textContent.trim() && e.querySelector('.event-format-description').textContent.trim()) && !document.querySelector('.event-format-audience')"), true, 'Every format keeps its title and description without audience labels');
-      assert.equal(await evaluate("[...document.querySelectorAll('#events img')].every(e=>e.loading==='lazy' && e.width>0 && e.height>0 && e.alt.trim())"), true, 'Photo dimensions, lazy loading and alternative text');
+      assert.equal(await evaluate("[...document.querySelectorAll('#events img')].every(e=>e.width>0 && e.height>0 && e.alt.trim() && e.srcset && e.sizes) && [...document.querySelectorAll('.event-format-card img')].every(e=>e.loading==='lazy') && document.querySelector('.alumni-event-hero img').loading==='eager' && document.querySelector('.alumni-event-hero img').fetchPriority==='low'"), true, 'Responsive photos have dimensions and alternative text; activity cards lazy-load and annual photo preloads at low priority');
       assert.equal(await evaluate("[...document.querySelectorAll('.event-format-card figcaption')].filter(e=>e.textContent.includes('2025')).length"), 2, 'Both historical 2025 photos stay explicit');
       assert.equal(await evaluate("document.querySelector('.community-heading p').textContent.includes('2026')"), true, 'Format counts retain their year');
       const photoCount=await evaluate("document.querySelectorAll('#events img').length");
@@ -334,9 +334,19 @@ try {
         assert.equal(await evaluate("document.querySelectorAll('.desktop-nav a').length"), 8, 'All nav items remain available');
         assert.equal(await evaluate("document.querySelector('.desktop-nav a:last-child').getAttribute('href')"), '#contact');
         assert.equal(await evaluate("document.querySelectorAll('script').length"), 0, 'Legacy pages stay script-free');
+        // Native lazy images must be brought into view before checking availability.
+        const imageCount = await evaluate('document.images.length');
+        for (let i = 0; i < imageCount; i++) {
+          await evaluate(`document.images[${i}].scrollIntoView({block:'center',behavior:'instant'})`);
+          for (let attempt = 0; attempt < 60; attempt++) {
+            if (await evaluate(`document.images[${i}].complete&&document.images[${i}].naturalWidth>0`)) break;
+            await wait(50);
+          }
+        }
         assert.equal(await evaluate("[...document.images].every(i=>i.complete&&i.naturalWidth>0)"), true, 'Legacy images load under project prefix: ' + url);
         const links = await evaluate("[...document.querySelectorAll('a[href]')].map(a=>a.href).filter(u=>u.startsWith(location.origin)&&!new URL(u).hash)");
         for (const link of new Set(links)) assert.equal((await fetch(link)).status, 200, 'Internal link resolves: ' + link);
+        if (width === 1440 && !slug) { await evaluate('scrollTo(0,0)'); }
         if (width === 1440 && !slug) await shot('legacy-home-' + locale, width);
         legacyCases++;
       }
