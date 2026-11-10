@@ -32,6 +32,7 @@ const dictionary: Record<string, string> = {
   '遵义': 'Zunyi', '遵义 · 主题研讨「守初心」': 'Zunyi · discussion on staying true to the mission', '遵义 · 茅台镇': 'Zunyi · Maotai Town',
   '36氪转载': '36Kr (reprint)', '北京商报': 'Beijing Business Today', '南方财经': 'Southern Finance',
   '同花顺转北交所披露': 'Beijing Stock Exchange disclosure via iFinD', '封面新闻（网易转载）': 'Cover News (via NetEase)',
+  '每日经济新闻': 'National Business Daily', '华尔街见闻': 'Wallstreetcn',
   '新华网（转载）': 'Xinhua (reprint)', '澎湃新闻': 'The Paper', '腾讯新闻': 'Tencent News', '行业报道': 'Industry report',
 };
 
@@ -84,9 +85,14 @@ export const alumniUi = {
     companyUnit: '家公司', countUnit: '家公司', alumniUnit: '位校友', segmentUnit: '个产业环节', regionUnit: '个地区', eventUnit: '场活动与课程',
     search: '搜索公司', placeholder: '搜公司、方向，比如 灵巧手、巡检、陪伴', reset: '清除筛选', filters: '按环节、地区、期数筛选',
     segment: '环节', region: '地区', period: '期数（可跨期）', empty: '没有匹配的公司，换个关键词或清除筛选试试。',
-    reports: '公开报道', recent: '近期动态', newsIntro: '公开报道，每条可点开来源。', more: '查看更多动态',
+    reports: '公开报道', recent: '校友进展', newsIntro: '融资、上市与公司新进展。', more: '查看更多动态',
     official: '官网', latest: '最新动态', source: '来源', eventTitle: '活动与课程', completed: '场已办', scheduled: '场已排期', months: '个月有活动',
     next: '接下来', archive: '全年记录', monthFilter: '按月份查看全年活动', emptyMonth: '本月暂无活动记录。', scheduledStatus: '已排期',
+    eventYearNote: '以下活动日期均为 {year} 年，数量仅统计该年度。',
+    annualEventUnit: '{year} 年活动与课程',
+    annualPhoto: '2026 年活动现场', annualPhotoNote: 'CES 考察与海外交流',
+    eventFormatsTitle: '六类活动与课程', eventFormatsNote: '{year} 年数量含已办与排期；配图含往期现场。',
+    capitalNews: '融资与上市', otherNews: '更多校友进展',
   },
   en: {
     all: 'All', directory: 'Company directory', title: 'Find companies. Explore the ecosystem.', data: 'Source: Mars Booster community database. Updated',
@@ -94,8 +100,13 @@ export const alumniUi = {
     companyUnit: 'companies', countUnit: 'companies', alumniUnit: 'alumni', segmentUnit: 'industry segments', regionUnit: 'regions', eventUnit: 'events & courses',
     search: 'Search companies', placeholder: 'Search companies or capabilities', reset: 'Clear filters', filters: 'Filter by segment, region or cohort',
     segment: 'Segment', region: 'Region', period: 'Cohort (may overlap)', empty: 'No matching companies. Try another keyword or clear the filters.',
-    reports: 'Public reports', recent: 'Recent news', newsIntro: 'Open any item to read its source.', more: 'More news',
+    reports: 'Public reports', recent: 'Alumni updates', newsIntro: 'Funding, listings & company milestones.', more: 'More news',
     official: 'Website', latest: 'Latest news', source: 'Source', eventTitle: 'Events & courses', completed: 'completed', scheduled: 'scheduled', months: 'active months',
     next: 'Coming up', archive: 'Year in review', monthFilter: 'Filter annual events by month', emptyMonth: 'No events recorded this month.', scheduledStatus: 'Scheduled',
+    eventYearNote: 'All event dates below are in {year}. Counts cover this year only.',
+    annualEventUnit: 'Events & courses in {year}',
+    annualPhoto: 'Events in 2026', annualPhotoNote: 'CES visits & overseas exchanges',
+    eventFormatsTitle: 'Six ways to take part', eventFormatsNote: 'Counts include completed and scheduled events in {year}. Photos include past gatherings.',
+    capitalNews: 'Funding & listings', otherNews: 'More company updates',
   },
 };

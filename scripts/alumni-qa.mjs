@@ -9,7 +9,12 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const artifact = path.join(root, 'pages-dist');
-const out = path.resolve(root, '../prototype/qa-round02-alumni');
+const out = path.resolve(root, '../prototype/qa-round03-event-formats');
+const eventSnapshot = JSON.parse(await readFile(path.join(root, 'data/alumni.json'), 'utf8')).events;
+const expectedTypeCounts = {};
+for (const event of eventSnapshot) {
+  for (const type of event.types) expectedTypeCounts[type] = (expectedTypeCounts[type] || 0) + 1;
+}
 await mkdir(out, { recursive: true });
 const server = createServer(async (req, res) => {
   try {
@@ -18,7 +23,7 @@ const server = createServer(async (req, res) => {
     if (!file.startsWith(artifact + path.sep)) throw new Error('Invalid path');
     if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html');
     const content = await readFile(file);
-    res.setHeader('Content-Type', ({ '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png' })[path.extname(file)] || 'application/octet-stream');
+    res.setHeader('Content-Type', ({ '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.webp': 'image/webp' })[path.extname(file)] || 'application/octet-stream');
     res.end(content);
   } catch { res.writeHead(404); res.end(); }
 });
@@ -117,6 +122,7 @@ try {
   assert.equal(await evaluate("document.activeElement.id"), 'alumni-q');
   await evaluate("document.getElementById('ev-2').click()");
   assert.equal(await evaluate("[...document.querySelectorAll('.event-upcoming .ev-row')].filter(e=>getComputedStyle(e).display!=='none').length"), 5, 'Archive month does not filter upcoming events');
+  assert.deepEqual(await evaluate("Object.fromEntries([...document.querySelectorAll('.event-format-card')].map(e=>[e.dataset.eventType,Number(e.querySelector('.event-format-count').textContent)]))"), expectedTypeCounts, 'Month filtering does not change annual format totals');
   assert.equal(await evaluate("getComputedStyle(document.querySelector('.event-empty')).display"), 'block');
   assert.equal(await evaluate("[...document.querySelectorAll('.event-grid .ev-row:not(.event-empty)')].filter(e=>getComputedStyle(e).display!=='none').length"), 0);
   await evaluate("document.querySelector('input[name=\"event-month\"]').click();document.querySelector('.co-card summary').focus()");
@@ -158,7 +164,7 @@ try {
     assert.equal(await evaluate("document.getElementById('alumni-count').textContent"), '185 companies');
     assert.equal(await evaluate("document.documentElement.scrollWidth<=innerWidth"), true, 'English layout must not overflow');
     assert.equal(await evaluate("document.querySelector('.alumni-title').textContent"), 'Find companies. Explore the ecosystem.');
-    assert.equal(await evaluate("document.querySelectorAll('[data-news-id]').length"), 30);
+    assert.equal(await evaluate("document.querySelectorAll('[data-news-id]').length"), 32);
     const snapshot = JSON.parse(await readFile(path.join(root, 'data/alumni.json'), 'utf8'));
     const names = JSON.parse(await readFile(path.join(root, 'data/company-names.json'), 'utf8'));
     const expectedNames = snapshot.companies.map((c) => {
@@ -185,6 +191,37 @@ try {
         const ids=[...document.querySelectorAll('[data-news-id]')].map(e=>e.dataset.newsId);
         return new Set(ids).size===ids.length && document.querySelectorAll('.alumni-featured article').length===3;
       })()`), true, 'Featured and timeline records are unique');
+      assert.equal(await evaluate(`(() => {
+        const groups=[...document.querySelectorAll('[data-news-group]')];
+        return groups.map(g=>g.dataset.newsGroup).join(',')==='capital,other' && groups.every(g=>{
+          const rows=[...g.querySelectorAll('[data-news-id]')];
+          const dates=rows.map(r=>r.querySelector('time').dateTime);
+          return rows.every(r=>r.dataset.newsKind===g.dataset.newsGroup) && dates.every((d,i)=>!i||dates[i-1]>=d);
+        });
+      })()`), true, 'Capital news precedes other news; both groups are newest first');
+      assert.deepEqual(await evaluate("[...document.querySelectorAll('.alumni-featured article')].map(e=>e.dataset.newsId)"), ['reczz28XSn9mlFYR','reczz28XSn9mlRV1','reczz28XSn9mlQqF'], 'Same verified selections in both languages');
+      assert.equal(await evaluate("document.querySelector('.featured-source time').dateTime"), '2026-10-03', 'IPO reporting date differs from listing date');
+      assert.equal(await evaluate("document.querySelector('.alumni-glance article:last-child').textContent.includes('2026') && document.querySelector('.event-year-heading').textContent.includes('2026') && document.getElementById('event-year-note').textContent.includes('2026')"), true, 'Event year appears at the count and date list');
+      assert.equal(await evaluate("document.querySelector('.alumni-glance article:last-child span').textContent"), locale==='zh'?'2026 年活动与课程':'Events & courses in 2026', 'Year cannot be mistaken for the number of events');
+      assert.equal(await evaluate("document.querySelector('.event-grid').getAttribute('aria-describedby')"), 'event-year-note');
+      assert.equal(await evaluate("document.querySelectorAll('#events img').length"), 7, 'Annual photo plus six activity formats');
+      const typeCounts = await evaluate("Object.fromEntries([...document.querySelectorAll('.event-format-card')].map(e=>[e.dataset.eventType,Number(e.querySelector('.event-format-count').textContent)]))");
+      assert.deepEqual(typeCounts, expectedTypeCounts, 'Format counts come from canonical event records in both languages');
+      assert.equal(Object.values(typeCounts).reduce((sum,n)=>sum+n,0), eventSnapshot.length, 'The six formats account for every event once');
+      assert.equal(await evaluate("[...document.querySelectorAll('.event-format-card')].every(e=>e.querySelector('h4').textContent.trim() && e.querySelector('.event-format-audience').textContent.trim() && e.querySelector('.event-format-description').textContent.trim())"), true, 'Every format explains its audience and activity');
+      assert.equal(await evaluate("[...document.querySelectorAll('#events img')].every(e=>e.loading==='lazy' && e.width>0 && e.height>0 && e.alt.trim())"), true, 'Photo dimensions, lazy loading and alternative text');
+      assert.equal(await evaluate("[...document.querySelectorAll('.event-format-card figcaption')].filter(e=>e.textContent.includes('2025')).length"), 2, 'Both historical 2025 photos stay explicit');
+      assert.equal(await evaluate("document.querySelector('.community-heading p').textContent.includes('2026')"), true, 'Format counts retain their year');
+      const photoCount=await evaluate("document.querySelectorAll('#events img').length");
+      for (let i=0;i<photoCount;i++) {
+        await evaluate(`document.querySelectorAll('#events img')[${i}].scrollIntoView({block:'center',behavior:'instant'})`);
+        for (let attempt=0;attempt<30;attempt++) {
+          if (await evaluate(`document.querySelectorAll('#events img')[${i}].complete && document.querySelectorAll('#events img')[${i}].naturalWidth>0`)) break;
+          await wait(100);
+        }
+      }
+      assert.equal(await evaluate("[...document.querySelectorAll('#events img')].every(e=>e.complete && e.naturalWidth>0)"), true, 'All photos load under GitHub project subpath');
+      await evaluate("scrollTo({top:0,behavior:'instant'})");
       for (const index of [1, 5, 8, 184]) {
         const layout = await evaluate(`(() => {
           const cards=[...document.querySelectorAll('.co-card')];
@@ -221,9 +258,11 @@ try {
       assert.equal(await evaluate("document.querySelector('.co-drawer').hidden"), true, 'Filter closes drawer');
       await evaluate("document.getElementById('alumni-reset').click();document.querySelector('.alumni-filter-panel').open=true");
       await shot(`filters-${locale}-${width}`, width, await evaluate("document.querySelector('.alumni-filters').getBoundingClientRect().top+scrollY"), 1000);
-      for (const selector of ['.alumni-news-row', '#news', '#events']) {
+      for (const selector of ['.alumni-news-row', '#news', '#events', '.alumni-community', '.event-year-note']) {
         const top=await evaluate(`document.querySelector('${selector}').getBoundingClientRect().top+scrollY`);
-        await shot(`${selector==='#news'?'featured':selector==='#events'?'events':'timeline'}-${locale}-${width}`, width, top, 1500);
+        const name=selector==='#news'?'featured':selector==='#events'?'events':selector==='.alumni-community'?'community':selector==='.event-year-note'?'annual-records':'timeline';
+        const height=name==='community'?await evaluate("Math.ceil(document.querySelector('.alumni-community').getBoundingClientRect().height)+20"):1500;
+        await shot(`${name}-${locale}-${width}`, width, top, height);
       }
       await evaluate(`(() => {
         const cards=[...document.querySelectorAll('.co-card')];
@@ -282,13 +321,15 @@ try {
       }
     }
   }
-  evidence.push({ legacyCases, projectSubpath: '/mars-booster-site/', english: '185 companies / 63 events / 30 translated news; official-name search and localized reset PASS' });
+  evidence.push({ legacyCases, projectSubpath: '/mars-booster-site/', english: '185 companies / 63 events / 32 translated news; official-name fallback, search and localized reset PASS' });
   await send('Network.setBlockedURLs', { urls: ['*assets/alumni.js*'] }); await load();
   assert.equal(await evaluate("getComputedStyle(document.querySelector('.alumni-search')).display"), 'none', 'Failed asset keeps unavailable search hidden');
   const html = await readFile(path.join(artifact, 'zh/alumni/index.html'), 'utf8');
-  assert(!/超 3 亿元|超 6 亿元|600\+|发布前逐条核对|港交所 6731/.test(html), 'No unverified story blocks');
+  assert(!/超 3 亿元|超 6 亿元|600\+|发布前逐条核对|6731/.test(html), 'No unverified story blocks or unsupported listing code');
   assert.equal((html.match(/<script\b/g) || []).length, 1);
   evidence.push({ checks: 'search 6, combination 32, zero state, reset, URL reload/popstate, keyboard details, news 105, empty month, no-JS CSS filter 70, script failure, output gate', result: 'PASS' });
+  evidence.push({ round03: 'explicit 2026 scope, capital-first groups, three same verified selections, unique news IDs, source reporting dates, 7 photos with historical 2025 captions, image loading and bilingual four-width screenshots', result:'PASS' });
+  evidence.push({ eventFormats: expectedTypeCounts, checks:'Six bilingual photo cards with audience and description; counts total 63 and are independent of month filtering', result:'PASS' });
   await writeFile(path.join(out, 'results.json'), JSON.stringify(evidence, null, 2));
   console.log(JSON.stringify(evidence, null, 2));
 } finally { if (ws) ws.close(); chrome.kill(); await new Promise((resolve) => server.close(resolve)); }

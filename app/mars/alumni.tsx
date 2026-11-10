@@ -1,10 +1,12 @@
+/* eslint-disable @next/next/no-img-element -- Static export uses pre-sized, compressed WebP assets. */
 import { alumni, type AlumniCompany, type AlumniEvent, type AlumniNews } from './alumni-data';
 import { alumniUi, localizedAlumni } from './alumni-localized';
+import { capitalFeatures, eventFormats, eventIdsByFormat, eventPhotos, eventYear, isCapitalNews } from './alumni-editorial';
 import type { Locale } from './content';
 
 const A = alumni;
 const total = A.companies.length;
-const year = A.meta.generatedAt.slice(0, 4);
+const year = eventYear;
 const scheduled = A.events.filter((e) => {
   const date = e.date.match(/^(\d{1,2})\.(\d{1,2})/);
   return e.status === '已排期' && date && `${year}-${date[1].padStart(2, '0')}-${date[2].padStart(2, '0')}` >= A.meta.generatedAt;
@@ -126,9 +128,61 @@ function EventRow({ e, locale }: { e: AlumniEvent; locale: Locale }) {
 
 function NewsRow({ n }: { n: AlumniNews }) {
   return (
-    <a className="alumni-news-row" data-news-id={n.id} href={n.url} target="_blank" rel="noopener">
-      <time>{n.date.replace(/-/g, '.')}</time><b>{n.company}</b><span>{n.title}</span><em>{n.source}</em>
+    <a className="alumni-news-row" data-news-id={n.id} data-news-kind={isCapitalNews(n.id) ? 'capital' : 'other'} href={n.url} target="_blank" rel="noopener">
+      <time dateTime={n.date}>{n.date.replace(/-/g, '.')}</time><b>{n.company}</b><span>{n.title}</span><em>{n.source}</em>
     </a>
+  );
+}
+
+function NewsGroup({ title, news, locale, kind }: { title: string; news: AlumniNews[]; locale: Locale; kind: string }) {
+  if (!news.length) return null;
+  return (
+    <div className="alumni-news-group" data-news-group={kind}>
+      <h3 className="news-group-heading">{title}</h3>
+      <div className="alumni-news">
+        {news.slice(0, 8).map((n) => <NewsRow key={n.id} n={n} />)}
+      </div>
+      {news.length > 8 ? <details className="alumni-news-more">
+        <summary>{alumniUi[locale].more} · {news.length - 8}</summary>
+        {news.slice(8).map((n) => <NewsRow key={n.id} n={n} />)}
+      </details> : null}
+    </div>
+  );
+}
+
+function EventFormats({ locale, events }: { locale: Locale; events: AlumniEvent[] }) {
+  const ui = alumniUi[locale];
+  return (
+    <div className="alumni-community" aria-labelledby="event-formats-title">
+      <div className="community-heading">
+        <h3 id="event-formats-title">{ui.eventFormatsTitle}</h3>
+        <p>{ui.eventFormatsNote.replace('{year}', String(year))}</p>
+      </div>
+      <div className="event-format-grid">
+        {eventFormats.map((format) => {
+          const ids = eventIdsByFormat.get(format.type);
+          const matching = events.filter((event) => ids?.has(event.id));
+          const audience = [...new Set(matching.map((event) => event.audience).filter(Boolean))].join(' / ');
+          const photo = format.photo;
+          return (
+            <article className="event-format-card" key={format.type} data-event-type={format.type}>
+              <figure>
+                <img src={`../../assets/alumni/${photo.file}`} alt={photo[locale].alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
+                <figcaption>{photo[locale].caption}</figcaption>
+              </figure>
+              <div className="event-format-body">
+                <strong className="event-format-count" aria-label={`${year} · ${format[locale].title} · ${matching.length}`}>{matching.length}</strong>
+                <div>
+                  <h4>{format[locale].title}</h4>
+                  <p className="event-format-audience">{audience}</p>
+                  <p className="event-format-description">{format[locale].description}</p>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -137,10 +191,14 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
   const ui = alumniUi[locale];
   const scheduledIds = new Set(scheduled.map((e) => e.id));
   const upcoming = A.events.filter((e) => scheduledIds.has(e.id));
-  const featuredIds = new Set(['reczz28XSn9mlEIS', 'reczz28XSn9mlEXK', 'reczz28XSn9mlEc1']);
+  const featuredIds = new Set(capitalFeatures.map((f) => f.id));
   const news = A.news.filter((n) => n.url && n.date);
-  const featured = news.filter((n) => featuredIds.has(n.id));
-  const remaining = news.filter((n) => !featuredIds.has(n.id));
+  const featured = capitalFeatures.map((feature) => {
+    const record = news.find((n) => n.id === feature.id);
+    if (!record) throw new Error(`Missing featured news record: ${feature.id} (${locale})`);
+    return { ...record, feature };
+  });
+  const remaining = news.filter((n) => !featuredIds.has(n.id)).sort((a, b) => b.date.localeCompare(a.date));
   return (
     <>
       <section className="section alumni-intro">
@@ -165,7 +223,7 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
           <article><strong>{A.meta.counts.alumni}</strong><span>{ui.alumniUnit}</span></article>
           <article><strong>{A.stats.bySegment.length}</strong><span>{ui.segmentUnit}</span></article>
           <article><strong>{A.stats.byRegion.length}</strong><span>{ui.regionUnit}</span></article>
-          <article><strong>{A.meta.counts.events}</strong><span>{ui.eventUnit}</span></article>
+          <article><strong>{A.meta.counts.events}</strong><span>{ui.annualEventUnit.replace('{year}', String(year))}</span></article>
         </div>
       </section>
 
@@ -225,19 +283,15 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
         <div className="alumni-featured" aria-label={locale === 'en' ? 'Featured news' : '重点新闻'}>
           {featured.map((n) => (
             <article key={n.id} data-news-id={n.id}>
+              <h3><a href={n.url} target="_blank" rel="noopener">{n.feature[locale].value}<span>{n.feature[locale].label}</span></a></h3>
               <p className="featured-company">{n.company}</p>
-              <h3><a href={n.url} target="_blank" rel="noopener">{n.title}</a></h3>
-              <p className="featured-source"><time>{n.date.replace(/-/g, '.')}</time><span>{n.source} ↗</span></p>
+              <p className="featured-fact">{n.title}</p>
+              <p className="featured-source"><a href={n.url} target="_blank" rel="noopener">{n.source} · <time dateTime={n.feature.reportedAt}>{n.feature.reportedAt.replace(/-/g, '.')}</time> ↗</a></p>
             </article>
           ))}
         </div>
-        <div className="alumni-news">
-          {remaining.slice(0, 16).map((n) => <NewsRow key={n.id} n={n} />)}
-        </div>
-        <details className="alumni-news-more">
-          <summary>{ui.more}</summary>
-          {remaining.slice(16).map((n) => <NewsRow key={n.id} n={n} />)}
-        </details>
+        <NewsGroup title={ui.capitalNews} news={remaining.filter((n) => isCapitalNews(n.id))} locale={locale} kind="capital" />
+        <NewsGroup title={ui.otherNews} news={remaining.filter((n) => !isCapitalNews(n.id))} locale={locale} kind="other" />
       </section>
 
       <section className="section dark-section alumni-events" id="events">
@@ -250,17 +304,27 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
             {A.stories.eventSummary.done} {ui.completed} · {A.stories.eventSummary.planned} {ui.scheduled} · {ui.asOf} {A.meta.generatedAt}
           </p>
         </div>
+        <figure className="alumni-event-hero">
+          <img src={`../../assets/alumni/${eventPhotos.annual.file}`} alt={eventPhotos.annual[locale].alt} width={eventPhotos.annual.width} height={eventPhotos.annual.height} loading="lazy" decoding="async" />
+          <figcaption>
+            <p className="kicker kicker-light">{ui.annualPhoto}</p>
+            <h3>{eventPhotos.annual[locale].caption}</h3>
+            <p>{ui.annualPhotoNote}</p>
+          </figcaption>
+        </figure>
         <div className="event-stats">
-          <article><strong>{A.meta.counts.events}</strong><span>{ui.eventUnit}</span></article>
+          <article><strong>{A.meta.counts.events}</strong><span>{ui.annualEventUnit.replace('{year}', String(year))}</span></article>
           <article><strong>{A.stories.eventSummary.done}</strong><span>{ui.completed}</span></article>
           <article><strong>{A.stories.eventSummary.planned}</strong><span>{ui.scheduled}</span></article>
           <article><strong>{A.stories.eventSummary.months}</strong><span>{ui.months}</span></article>
         </div>
+        <EventFormats locale={locale} events={A.events} />
+        <p className="event-year-note" id="event-year-note">{ui.eventYearNote.replace('{year}', String(year))}</p>
         {upcoming.length ? <div className="event-upcoming">
-          <h3>{ui.next}</h3>
+          <h3>{ui.next} · {year}</h3>
           {upcoming.map((e) => <EventRow key={e.id} e={e} locale={locale} />)}
         </div> : null}
-        <h3 className="event-year-heading">{ui.archive}</h3>
+        <h3 className="event-year-heading">{year} · {ui.archive}</h3>
         <div className="event-months" role="radiogroup" aria-label={ui.monthFilter}>
           {[
             { label: ui.all, value: 0 },
@@ -275,7 +339,7 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
             </label>
           ))}
         </div>
-        <div className="event-grid">
+        <div className="event-grid" aria-describedby="event-year-note">
           {A.events.map((e) => (
             <EventRow key={e.id} e={e} locale={locale} />
           ))}
