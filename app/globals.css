@@ -561,6 +561,22 @@ img { display:block; max-width:100%; }
   .cooperation-stats { grid-template-columns:1fr; gap:var(--alumni-space-group); margin-top:32px; }
   .cooperation-stats dd { font-size:var(--alumni-font-feature); }
 }
+.cooperation-cases { margin-top:56px; }
+.cooperation-cases-heading { display:flex; justify-content:space-between; align-items:baseline; gap:var(--alumni-space-related) var(--alumni-space-group); flex-wrap:wrap; margin-bottom:var(--alumni-space-group); }
+.cooperation-cases-heading h3 { margin:0; font-size:var(--alumni-font-subheading); font-weight:600; }
+.cooperation-case-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(24px,3vw,48px); }
+.cooperation-case-grid article { border-top:1px solid var(--line); padding-top:var(--alumni-space-group); min-width:0; }
+.cooperation-case-logo { height:72px; display:flex; align-items:center; margin-bottom:16px; }
+.cooperation-case-logo img { display:block; width:auto; height:auto; max-width:192px; max-height:64px; object-fit:contain; mix-blend-mode:multiply; }
+.cooperation-case-grid h4 { margin:0 0 28px; font-size:var(--alumni-font-detail-title); font-weight:600; }
+.cooperation-case-metrics { margin:0 0 var(--alumni-space-related); }
+.cooperation-case-metrics>div { display:flex; flex-direction:column-reverse; gap:4px; }
+.cooperation-case-metrics dt { font-size:var(--alumni-font-body); line-height:1.65; color:var(--muted); }
+.cooperation-case-metrics dd { margin:0; font-size:var(--alumni-font-feature); font-weight:600; line-height:1.3; letter-spacing:-.025em; overflow-wrap:anywhere; }
+.cooperation-case-detail { margin:var(--alumni-space-related) 0 0; font-size:var(--alumni-font-body); line-height:1.8; overflow-wrap:anywhere; }
+@media (max-width:980px) {
+  .cooperation-case-grid { grid-template-columns:1fr; gap:32px; }
+}
 .news-group-heading { margin:36px 0 14px; font-size:var(--alumni-font-subheading); line-height:1.4; font-weight:600; }
 .event-year-note { margin:48px 0 28px; padding-top:28px; border-top:1px solid rgba(255,255,255,.2); font-size:var(--alumni-font-meta); line-height:1.65; color:rgba(255,255,255,.7); }
 .alumni-event-hero { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); margin:0; background:#171a1c; }

@@ -95,6 +95,7 @@ export const alumniUi = {
     eventFormatsTitle: '六类活动与课程', eventFormatsNote: '{year} 年数量含已办与排期；配图含往期现场。',
     capitalNews: '融资与上市', otherNews: '更多校友进展',
     cooperation: '校友合作', cooperationTitle: '合作累计', cooperationSource: '累计数据由火星提供',
+    cooperationCases: '校友合作案例', cooperationCasesSource: '来源：火星公司介绍 PPT · 案例数据为材料所载',
   },
   en: {
     all: 'All', directory: 'Company directory', title: 'Find companies. Explore the ecosystem.', data: 'Source: Mars Booster community database. Updated',
@@ -111,5 +112,6 @@ export const alumniUi = {
     eventFormatsTitle: 'Six ways to take part', eventFormatsNote: 'Counts include completed and scheduled events in {year}. Photos include past gatherings.',
     capitalNews: 'Funding & listings', otherNews: 'More company updates',
     cooperation: 'Alumni collaboration', cooperationTitle: 'Cumulative impact', cooperationSource: 'Cumulative figures supplied by Mars Booster',
+    cooperationCases: 'Alumni collaboration cases', cooperationCasesSource: 'Source: Mars Booster company-profile presentation; figures as reported in the material',
   },
 };

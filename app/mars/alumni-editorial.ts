@@ -27,6 +27,44 @@ export const cooperationSummary = {
   ],
 };
 
+// Client-supplied company-profile PPTX, slide 17 (printed page 16).
+// Preserve the source's time windows, intent/order distinctions and company estimate.
+export const cooperationCases = [
+  {
+    id: 'lingyu', company: '灵御智能', logo: 'lingyu-logo.png',
+    zh: {
+      result: { value: '2,000万+', label: '校友合作订单' },
+      description: '通过产业营与长期社区协同，连接供应链和校友业务。',
+    },
+    en: {
+      result: { value: 'RMB 20m+', label: 'Orders through alumni collaboration' },
+      description: 'The Industry Program and ongoing community collaboration connected supply chains and alumni business opportunities.',
+    },
+  },
+  {
+    id: 'jipai', company: '极湃电磁', logo: 'jipai-logo.jpg',
+    zh: {
+      result: { value: '>10家', label: '意向合作校友（半年+）' },
+      description: '通过同期深度共学、跨期校友引荐与业务对接，拓展客户和新应用场景。',
+    },
+    en: {
+      result: { value: '>10', label: 'Alumni companies interested in collaboration (over six months)' },
+      description: 'Shared learning, introductions across cohorts and business matching opened connections to customers and new applications.',
+    },
+  },
+  {
+    id: 'zhongzhi', company: '中智蓝途', logo: 'zhongzhi-logo.png',
+    zh: {
+      result: { value: '<1个月', label: '开营后与同期学员达成合作意向' },
+      description: '围绕机器人业务识别需求、连接场景与供应链，形成百万级初步订单。',
+    },
+    en: {
+      result: { value: '<1 month', label: 'From program start to an intent to collaborate with cohort peers' },
+      description: 'Identifying robotics needs and connecting applications and supply chains led to preliminary orders in the millions of RMB.',
+    },
+  },
+];
+
 // Classify source records once so translated titles keep the same editorial order.
 const capitalIds = new Set(alumni.news
   .filter((n) => /融资|上市|估值|IPO|募资|挂牌|增发/.test(n.title))

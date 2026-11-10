@@ -394,5 +394,29 @@
       "height": 666,
       "bytes": 79516
     }
+  ],
+  "alumni/lingyu-logo.png": [
+    {
+      "file": "alumni-lingyu-logo-384.webp",
+      "width": 384,
+      "height": 83,
+      "bytes": 6916
+    }
+  ],
+  "alumni/jipai-logo.jpg": [
+    {
+      "file": "alumni-jipai-logo-384.webp",
+      "width": 384,
+      "height": 440,
+      "bytes": 62928
+    }
+  ],
+  "alumni/zhongzhi-logo.png": [
+    {
+      "file": "alumni-zhongzhi-logo-384.webp",
+      "width": 384,
+      "height": 93,
+      "bytes": 8994
+    }
   ]
 }

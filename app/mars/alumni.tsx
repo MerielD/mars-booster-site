@@ -2,7 +2,7 @@ import { imageProps } from './images';
 /* eslint-disable @next/next/no-img-element -- Static export uses pre-sized, compressed WebP assets. */
 import { alumni, type AlumniCompany, type AlumniEvent, type AlumniNews } from './alumni-data';
 import { alumniUi, localizedAlumni } from './alumni-localized';
-import { capitalFeatures, cooperationSummary, eventFormats, eventIdsByFormat, eventPhotos, eventYear, isCapitalNews } from './alumni-editorial';
+import { capitalFeatures, cooperationCases, cooperationSummary, eventFormats, eventIdsByFormat, eventPhotos, eventYear, isCapitalNews } from './alumni-editorial';
 import type { Locale } from './content';
 
 const A = alumni;
@@ -306,6 +306,29 @@ export function AlumniPageContent({ locale }: { locale: Locale }) {
             </div>
           ))}
         </dl>
+        <div className="cooperation-cases" aria-labelledby="cooperation-cases-title">
+          <div className="cooperation-cases-heading">
+            <h3 id="cooperation-cases-title">{ui.cooperationCases}</h3>
+            <p className="cooperation-source">{ui.cooperationCasesSource}</p>
+          </div>
+          <div className="cooperation-case-grid">
+            {cooperationCases.map((item) => {
+              const copy = item[locale];
+              return (
+                <article key={item.id} data-case-id={item.id}>
+                  <div className="cooperation-case-logo">
+                    <img {...imageProps(`alumni/${item.logo}`, '../../', '192px')} alt="" width={192} height={64} />
+                  </div>
+                  <h4>{item.company}</h4>
+                  <dl className="cooperation-case-metrics">
+                    <div><dt>{copy.result.label}</dt><dd>{copy.result.value}</dd></div>
+                  </dl>
+                  <p className="cooperation-case-detail">{copy.description}</p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
       </section>
 
       <section className="section dark-section alumni-events" id="events">
