@@ -162,7 +162,6 @@ function EventFormats({ locale, events }: { locale: Locale; events: AlumniEvent[
         {eventFormats.map((format) => {
           const ids = eventIdsByFormat.get(format.type);
           const matching = events.filter((event) => ids?.has(event.id));
-          const audience = [...new Set(matching.map((event) => event.audience).filter(Boolean))].join(' / ');
           const photo = format.photo;
           return (
             <article className="event-format-card" key={format.type} data-event-type={format.type}>
@@ -174,7 +173,6 @@ function EventFormats({ locale, events }: { locale: Locale; events: AlumniEvent[
                 <strong className="event-format-count" aria-label={`${year} · ${format[locale].title} · ${matching.length}`}>{matching.length}</strong>
                 <div>
                   <h4>{format[locale].title}</h4>
-                  <p className="event-format-audience">{audience}</p>
                   <p className="event-format-description">{format[locale].description}</p>
                 </div>
               </div>

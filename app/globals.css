@@ -565,8 +565,7 @@ img { display:block; max-width:100%; }
 .event-format-body { display:grid; grid-template-columns:48px minmax(0,1fr); gap:var(--alumni-space-related); padding:20px; }
 .event-format-count { font-size:var(--alumni-font-stat); font-weight:640; line-height:1.2; font-variant-numeric:tabular-nums; color:var(--orange); }
 .event-format-body h4 { margin:0; font-size:var(--alumni-font-subheading); line-height:1.4; font-weight:600; }
-.event-format-audience { margin:8px 0; color:var(--orange); font-size:var(--alumni-font-meta); line-height:1.6; }
-.event-format-description { margin:0; color:rgba(255,255,255,.7); font-size:var(--alumni-font-body); line-height:1.7; overflow-wrap:anywhere; }
+.event-format-description { margin:var(--alumni-space-related) 0 0; color:rgba(255,255,255,.7); font-size:var(--alumni-font-body); line-height:1.7; overflow-wrap:anywhere; }
 @media (min-width:761px) and (max-width:980px) {
   .event-format-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }

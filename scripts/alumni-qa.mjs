@@ -208,7 +208,7 @@ try {
       const typeCounts = await evaluate("Object.fromEntries([...document.querySelectorAll('.event-format-card')].map(e=>[e.dataset.eventType,Number(e.querySelector('.event-format-count').textContent)]))");
       assert.deepEqual(typeCounts, expectedTypeCounts, 'Format counts come from canonical event records in both languages');
       assert.equal(Object.values(typeCounts).reduce((sum,n)=>sum+n,0), eventSnapshot.length, 'The six formats account for every event once');
-      assert.equal(await evaluate("[...document.querySelectorAll('.event-format-card')].every(e=>e.querySelector('h4').textContent.trim() && e.querySelector('.event-format-audience').textContent.trim() && e.querySelector('.event-format-description').textContent.trim())"), true, 'Every format explains its audience and activity');
+      assert.equal(await evaluate("[...document.querySelectorAll('.event-format-card')].every(e=>e.querySelector('h4').textContent.trim() && e.querySelector('.event-format-description').textContent.trim()) && !document.querySelector('.event-format-audience')"), true, 'Every format keeps its title and description without audience labels');
       assert.equal(await evaluate("[...document.querySelectorAll('#events img')].every(e=>e.loading==='lazy' && e.width>0 && e.height>0 && e.alt.trim())"), true, 'Photo dimensions, lazy loading and alternative text');
       assert.equal(await evaluate("[...document.querySelectorAll('.event-format-card figcaption')].filter(e=>e.textContent.includes('2025')).length"), 2, 'Both historical 2025 photos stay explicit');
       assert.equal(await evaluate("document.querySelector('.community-heading p').textContent.includes('2026')"), true, 'Format counts retain their year');
@@ -329,7 +329,7 @@ try {
   assert.equal((html.match(/<script\b/g) || []).length, 1);
   evidence.push({ checks: 'search 6, combination 32, zero state, reset, URL reload/popstate, keyboard details, news 105, empty month, no-JS CSS filter 70, script failure, output gate', result: 'PASS' });
   evidence.push({ round03: 'explicit 2026 scope, capital-first groups, three same verified selections, unique news IDs, source reporting dates, 7 photos with historical 2025 captions, image loading and bilingual four-width screenshots', result:'PASS' });
-  evidence.push({ eventFormats: expectedTypeCounts, checks:'Six bilingual photo cards with audience and description; counts total 63 and are independent of month filtering', result:'PASS' });
+  evidence.push({ eventFormats: expectedTypeCounts, checks:'Six bilingual photo cards with titles and descriptions, no audience labels; counts total 63 and are independent of month filtering', result:'PASS' });
   await writeFile(path.join(out, 'results.json'), JSON.stringify(evidence, null, 2));
   console.log(JSON.stringify(evidence, null, 2));
 } finally { if (ws) ws.close(); chrome.kill(); await new Promise((resolve) => server.close(resolve)); }
