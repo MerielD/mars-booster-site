@@ -43,11 +43,11 @@
     "bySegment": [
       {
         "name": "本体与场景应用",
-        "count": 71
+        "count": 72
       },
       {
         "name": "数据及基础设施",
-        "count": 29
+        "count": 28
       },
       {
         "name": "感知与交互",
@@ -3008,12 +3008,12 @@
     },
     {
       "id": "reczz28XSn9mqeVb",
-      "name": "易数科技",
-      "fullName": "易数科技",
+      "name": "澜拓智能",
+      "fullName": "澜拓智能",
       "intro": "易数科技拟成为面向具身智能的C端数据采集与交易平台，通过新的参与和激励机制扩大真实世界数据供给。",
       "website": "",
       "region": "大湾区",
-      "segment": "数据及基础设施",
+      "segment": "本体与场景应用",
       "subSegment": "",
       "status": "",
       "periods": [
